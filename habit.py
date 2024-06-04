@@ -12,7 +12,7 @@ from operator import attrgetter
 class Habit:
     """This is the Habit Class and associated methods."""
 
-    Database = "test.db"
+    Database = "main.db"
     habits = []
 
     @classmethod

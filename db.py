@@ -111,22 +111,50 @@ def search_habit(db, name):
         return None
 
 
-# def list_of_habits(db):
-#     """Search for a habit in the habit_metadata table.
-#         This function provides the ability to search for a habit by name, to ensure the habit is not
-#         duplicated in the database.
-#
-#     parameters:
-#         db: Database connection.
-#         name(str): Name of the habit to search for.
-#     """
-#
-#     cur = db.cursor()
-#     try:
-#         result = cur.execute("""SELECT name FROM habit_metadata""")
-#         return result.fetchall()
-#     except TypeError:
-#         return None
+def list_of_habits(db):
+    """Search for a habit in the habit_metadata table.
+        This function provides the ability to search for a habit by name, to ensure the habit is not
+        duplicated in the database.
+
+    parameters:
+        db: Database connection.
+        name(str): Name of the habit to search for.
+    """
+
+    cur = db.cursor()
+    try:
+        result = cur.execute("""SELECT name FROM habit_metadata""")
+        return result.fetchall()
+    except TypeError:
+        return None
+
+def list_of_habits_daily(db):
+    """Provides a list of habits that are to be done daily.
+
+    parameters:
+        db: Database connection.
+    """
+
+    cur = db.cursor()
+    try:
+        result = cur.execute("""SELECT name FROM habit_metadata WHERE frequency = "Daily" """)
+        return result.fetchall()
+    except TypeError:
+        return None
+
+def list_of_habits_weekly(db):
+    """Provides a list of habits that are to be done weekly.
+
+    parameters:
+        db: Database connection.
+    """
+
+    cur = db.cursor()
+    try:
+        result = cur.execute("""SELECT name FROM habit_metadata WHERE frequency = "Weekly" """)
+        return result.fetchall()
+    except TypeError:
+        return None
 
 
 def get_date_list(db, habit_id):
@@ -144,6 +172,8 @@ def get_date_list(db, habit_id):
 
 
 def delete_habit(db, habit_id=None):
+    """Deletes the habit from the habit_metadata table, and all dates from the
+    habit_completion_dates table."""
     cur = db.cursor()
     cur.execute("DELETE FROM habit_completion_dates WHERE habit_id = ?", (habit_id,))
     cur.execute("DELETE FROM habit_metadata WHERE habit_id = ?", (habit_id,))
@@ -151,6 +181,7 @@ def delete_habit(db, habit_id=None):
 
 
 def reset_habit(db, habit_id=None, start_date=None):
+    """This function deletes all of the previously entered dates, and resets the start date."""
     cur = db.cursor()
     cur.execute("DELETE FROM habit_completion_dates WHERE habit_id = ?", (habit_id,))
     cur.execute("UPDATE habit_metadata SET start_date = ? WHERE habit_id = ?", (start_date, habit_id))
