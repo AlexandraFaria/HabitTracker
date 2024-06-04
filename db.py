@@ -143,8 +143,7 @@ def get_date_list(db, habit_id):
     return dates
 
 
-def delete_habit(db, habit_id=None, name=None):
-    habit_id = get_primary_key(db, name)
+def delete_habit(db, habit_id=None):
     cur = db.cursor()
     cur.execute("DELETE FROM habit_completion_dates WHERE habit_id = ?", (habit_id,))
     cur.execute("DELETE FROM habit_metadata WHERE habit_id = ?", (habit_id,))

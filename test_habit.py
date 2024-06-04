@@ -17,7 +17,7 @@ def test_save_habit(habit1, habit2, habit3, habit4, habit5, db):
     db.commit()
 
 
-def test_data_storage(db):
+def test_data_storage(db, habit1, habit2, habit3, habit4, habit5):
     cur = db.cursor()
     cur.execute("SELECT name FROM habit_metadata")
     result = cur.fetchall()

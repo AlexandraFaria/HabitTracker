@@ -2,7 +2,8 @@
 
 
 from datetime import datetime, timedelta, date
-from db import (get_db, add_habit, get_primary_key, add_habit_completion, search_habit, get_date_list)
+from db import (get_db, add_habit, get_primary_key, add_habit_completion, search_habit, get_date_list,
+                reset_habit, delete_habit)
 from analyse import (calculate_longest_streak, calculate_current_streak, calculate_longest_streak_weekly,
                      calculate_current_streak_weekly)
 from operator import attrgetter
@@ -11,7 +12,7 @@ from operator import attrgetter
 class Habit:
     """This is the Habit Class and associated methods."""
 
-    Database = "main.db"
+    Database = "test.db"
     habits = []
 
     @classmethod
@@ -131,6 +132,8 @@ class Habit:
 
         else:
             add_habit(self.db, self.name, self.description, self.frequency, self.start_date)
+            self.habit_id = get_primary_key(self.db, self.name)
+            return self.habit_id
 
     @staticmethod
     def check_date_input_past(completion_date):
@@ -205,3 +208,15 @@ class Habit:
         if self.frequency == "Weekly":
             self.current_streak = calculate_current_streak_weekly(self.db, self.name, self.start_date)
             return self.current_streak
+
+    def reset_habit(self, start_date=None):
+        """Reset the habit by deleting all completion dates and add a new start date."""
+        reset_habit(self.db, self.habit_id, start_date)
+        self.start_date = start_date
+        return self.start_date
+
+    def delete_habit(self):
+        """Delete the habit from the database completely and remove from the habits list."""
+        delete_habit(self.db, self.habit_id)
+        self.habits.remove(self)
+        return self.habits
