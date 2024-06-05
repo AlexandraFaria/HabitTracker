@@ -211,6 +211,7 @@ class Habit:
 
     def reset_habit(self, start_date=None):
         """Reset the habit by deleting all completion dates and add a new start date."""
+        self.habit_id = get_primary_key(self.db, self.name)
         reset_habit(self.db, self.habit_id, start_date)
         self.start_date = start_date
         return self.start_date
