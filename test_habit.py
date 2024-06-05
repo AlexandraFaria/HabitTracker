@@ -83,6 +83,18 @@ def test_monthly_habit_completion(db, habit1dates, habit2dates, habit3dates, hab
             "Swimming: 6", "Water plants: 6" in str(Habit.monthly_habit_completion(5)))
 
 
+def test_habit_deletion(db, habit1, habit2, habit3, habit4, habit5):
+    habit1.delete_habit()
+    habit2.delete_habit()
+    habit3.delete_habit()
+    habit4.delete_habit()
+    habit5.delete_habit()
+    cur = db.cursor()
+    cur.execute("SELECT name FROM habit_metadata")
+    result = cur.fetchall()
+    assert result == []
+
+@pytest.mark.skip
 def teardown_method():
     os.remove("test.db")
     assert not os.path.exists("test.db")

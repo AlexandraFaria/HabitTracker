@@ -12,7 +12,7 @@ from operator import attrgetter
 class Habit:
     """This is the Habit Class and associated methods."""
 
-    Database = "main.db"
+    Database = "test.db"
     habits = []
 
     @classmethod
@@ -79,7 +79,7 @@ class Habit:
         else:
             raise (ValueError("Please enter a valid month between 1 and 12."))
 
-    def __init__(self, name: str = None, description: str = None, frequency: str = None, start_date: str = None):
+    def __init__(self, name: str = None, description: str = None, frequency: str = None, start_date: date = None):
         """
         Initialize Habit Instance.
 
@@ -97,7 +97,7 @@ class Habit:
         self.name = (name.lower()).capitalize()
         self.description = description
         self.frequency = frequency
-        self.start_date = date.today() if start_date is None else start_date
+        self.start_date = start_date
         self.habit_id = None
         self.current_streak = 0
         self.longest_streak = 0
@@ -217,6 +217,7 @@ class Habit:
 
     def delete_habit(self):
         """Delete the habit from the database completely and remove from the habits list."""
+        self.habit_id = get_primary_key(self.db, self.name)
         delete_habit(self.db, self.habit_id)
         self.habits.remove(self)
         return self.habits

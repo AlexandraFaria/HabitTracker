@@ -44,6 +44,7 @@ def create_tables(db):
     db.commit()
 
 
+
 def add_habit(db, name, description, frequency, start_date):
     """Add a habit to the database.
 
@@ -60,6 +61,7 @@ def add_habit(db, name, description, frequency, start_date):
     db.commit()
 
 
+
 def get_primary_key(db, name):
     """Get the primary key of the habit from the parent table habit_metadata
 
@@ -72,6 +74,7 @@ def get_primary_key(db, name):
     cur = db.cursor()
     result = cur.execute("""SELECT habit_id FROM habit_metadata WHERE name = ?""", (name,))
     return result.fetchone()[0]
+
 
 
 def add_habit_completion(db, habit_id, completion_date=None):
@@ -107,6 +110,24 @@ def search_habit(db, name):
     try:
         result = cur.execute("""SELECT * FROM habit_metadata WHERE name = ?""", (name,))
         return result.fetchone()[1]
+    except TypeError:
+        return None
+
+def search_start_date(db, name):
+    """Search for a habit in the habit_metadata table by name and return the start date.
+
+    parameters:
+       db: Database connection.
+       name(str): Name of the habit to search for.
+
+    return:
+        start_date(str): Start date of the habit.
+    """
+
+    cur = db.cursor()
+    try:
+        result = cur.execute("""SELECT * FROM habit_metadata WHERE name = ?""", (name,))
+        return result.fetchone()[4]
     except TypeError:
         return None
 
