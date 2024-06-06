@@ -1,11 +1,12 @@
 from habit import Habit
 import questionary
 from datetime import datetime, date
+import calendar
 from db import (get_db, list_of_habits, list_of_habits_weekly, list_of_habits_daily, search_start_date, reset_habit,
                 search_habit)
-from analyse import get_longest_streak
+from analyse import get_longest_streak, get_current_streak, monthly_habit_completion
 from operator import attrgetter
-
+####How should you order your imports?
 
 def check_date(start_date):
     while True:
@@ -198,10 +199,38 @@ def cli():
 
             if analysis_choice == "Longest Streak of All Habits":
                 pass
+
             if analysis_choice == "Last Months Habit Check-offs":
-                pass
+                month = questionary.text("Enter the month you would like to analyze in the format of 1-12:").ask()
+                while True:
+                    try:
+                        month = int(month)
+                        if 1 <= month <= 12:
+                            break
+                        if month < 1 or month > 12:
+                            print("The month number you entered is not in the correct format. Please try again.")
+                            raise ValueError
+                    except ValueError:
+                        month = questionary.text("Please enter a month in the correct format: 1-12:").ask()
+
+                month_name = calendar.month_name[month]
+                print(f"\nHere is a list of all the habits you completed in {month_name}:\n")
+                monthly_habit_completion(db, month)
+
+
+    # Need to have a message if there are no habits that have been completed.
+    # Need to have a message returned for a list of all the habits that have been completed.
+
             if analysis_choice == "Current Streak for a Habit":
-                pass
+                habits = [habit[0] for habit in list_of_habits(db)]
+                if not habits:
+                    print("\nYou have no habits to analyze.\n")
+                    continue
+                habit_name = questionary.select("For which habit would you like to know your current streak?",
+                                                habits).ask()
+                current_streak = get_current_streak(db, habit_name)
+                print(f"\n{habit_name} has a longest streak of {current_streak}.\n")
+
             if analysis_choice == "Longest Streak for a Habit":
                 habits = [habit[0] for habit in list_of_habits(db)]
                 if not habits:

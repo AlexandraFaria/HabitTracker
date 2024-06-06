@@ -7,7 +7,7 @@ from db import (get_primary_key, get_date_list, get_db, list_of_habits_daily, li
 from datetime import timedelta, date, datetime
 
 
-def calculate_longest_streak(db, name, habit_id=None):
+def calculate_longest_streak(db, name):
     """Calculate the longest streak by comparing current streak to the longest streak."""
 
     habit_id = get_primary_key(db, name)
@@ -33,7 +33,7 @@ def calculate_longest_streak(db, name, habit_id=None):
         return longest_streak
 
 
-def calculate_longest_streak_weekly(db, name, start_date, habit_id=None):
+def calculate_longest_streak_weekly(db, name, start_date):
     """Calculate the longest streak by comparing current streak to the longest streak."""
 
     habit_id = get_primary_key(db, name)
@@ -79,7 +79,7 @@ def get_longest_streak(db, name):
         return f"{longest_streak} weeks"
 
 
-def calculate_current_streak(db, name, habit_id=None):
+def calculate_current_streak(db, name):
     """Calculate the current streak of the habit, if there is a completion date with today's date."""
 
     habit_id = get_primary_key(db, name)
@@ -107,7 +107,8 @@ def calculate_current_streak(db, name, habit_id=None):
 
         return current_streak
 
-def calculate_current_streak_weekly(db, name, start_date, habit_id=None):
+
+def calculate_current_streak_weekly(db, name, start_date):
     """Calculate the longest streak by comparing current streak to the longest streak."""
 
     habit_id = get_primary_key(db, name)
@@ -139,9 +140,63 @@ def calculate_current_streak_weekly(db, name, start_date, habit_id=None):
         return current_streak
 
 
+def get_current_streak(db, name):
+    """Get the current streak of the habit."""
+    daily_list = [habit[0] for habit in list_of_habits_daily(db)]
+    weekly_list = [habit[0] for habit in list_of_habits_weekly(db)]
+
+    if name in daily_list:
+        current_streak = calculate_current_streak(db, name)
+        return f"{current_streak} days"
+
+    if name in weekly_list:
+        start_date = search_start_date(db, name)
+        current_streak = calculate_current_streak_weekly(db, name, start_date)
+        return f"{current_streak} weeks"
 
 
-#
+def monthly_habit_completion(db, month):
+    """Get the number of completions for each habit in the last month, in ascending order.
+
+    parameters:
+        db: Database connection.
+       month(int): Numerical value of month for date retrieval.
+    returns:
+       list: Number of check-off events for each habit in the last month separated by frequency.
+    """
+    print("Daily Habits:\n")
+    daily_list = [habit[0] for habit in list_of_habits_daily(db)]
+    if not daily_list:
+        print("\nYou have no habits logged to analyze.\n")
+    else:
+        daily_habit_total = {}
+
+        for habit in daily_list:
+            habit_id = get_primary_key(db, habit)
+            dates = get_date_list(db, habit_id)
+            month_check_offs = [check_off for check_off in dates if check_off.month == month]
+            daily_habit_total[habit] = len(month_check_offs)
+        sort_daily_habit_total = dict(sorted(daily_habit_total.items(), key=lambda x: x[1]))
+        for key, value in sort_daily_habit_total.items():
+            print(f"{key}: {value}")
+
+    print("\nWeekly Habits:\n")
+    weekly_list = [habit[0] for habit in list_of_habits_weekly(db)]
+    if not weekly_list:
+        print("\nYou have no habits logged to analyze.\n")
+    else:
+        weekly_habit_total = {}
+
+        for habit in weekly_list:
+            habit_id = get_primary_key(db, habit)
+            dates = get_date_list(db, habit_id)
+            month_check_offs = [check_off for check_off in dates if check_off.month == month]
+            weekly_habit_total[habit] = len(month_check_offs)
+        sort_weekly_habit_total = dict(sorted(weekly_habit_total.items(), key=lambda x: x[1]))
+        for key, value in sort_weekly_habit_total.items():
+            print(f"{key}: {value}")
+
+
 # def calculate_longest_streak(db, name, habit_id=None):
 #     """Calculate the longest streak by comparing current streak to the longest streak."""
 #

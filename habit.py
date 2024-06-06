@@ -33,52 +33,6 @@ class Habit:
                 f"\nWeekly Habit with longest streak: {maximum_weekly_streak.name} "
                 f"with {maximum_weekly_streak.longest_streak} weeks.")
 
-    @classmethod
-    def monthly_habit_completion(cls, month: int):
-        """Get the number of completions for each habit in the last month, in ascending order.
-
-
-        parameters:
-           month(int): Numerical value of month for date retrieval.
-        returns:
-           list: Number of completion events for each habit in the last month separated by frequency.
-        """
-        # Not sure how to reduce code redundancy.
-
-        month = int(month)
-        if 1 <= month <= 12:
-
-            # First create a list of completion events for daily habits.
-            print("\nDaily Habits: Number of completion events in a month.")
-            daily_habits = [habit for habit in cls.habits if habit.frequency == "Daily"]
-            daily_habit_total = {}
-
-            for habit in daily_habits:
-                habit_id = get_primary_key(habit.db, habit.name)
-                dates = get_date_list(habit.db, habit_id)
-                month_check_offs = [check_off for check_off in dates if check_off.month == month]
-                daily_habit_total[habit.name] = len(month_check_offs)
-            sort_daily_habit_total = dict(sorted(daily_habit_total.items(), key=lambda x: x[1]))
-            for key, value in sort_daily_habit_total.items():
-                print(f"{key}: {value}")
-
-            # Second create a list of completion events for weekly habits.
-            print("\nWeekly Habits: Number of completion events in a month.")
-            weekly_habits = [habit for habit in cls.habits if habit.frequency == "Weekly"]
-            weekly_habit_total = {}
-
-            for habit in weekly_habits:
-                habit_id = get_primary_key(habit.db, habit.name)
-                dates = get_date_list(habit.db, habit_id)
-                month_check_offs = [check_off for check_off in dates if check_off.month == month]
-                weekly_habit_total[habit.name] = len(month_check_offs)
-            sort_weekly_habit_total = dict(sorted(weekly_habit_total.items(), key=lambda x: x[1]))
-            for key, value in sort_weekly_habit_total.items():
-                print(f"{key}: {value}")
-
-        else:
-            raise (ValueError("Please enter a valid month between 1 and 12."))
-
     def __init__(self, name: str = None, description: str = None, frequency: str = None, start_date: date = None):
         """
         Initialize Habit Instance.
@@ -192,15 +146,6 @@ class Habit:
             self.habit_id = get_primary_key(self.db, self.name)
             add_habit_completion(self.db, self.habit_id, completion_date)
 
-    def get_current_streak(self):
-        """Get the current streak of the habit."""
-        if self.frequency == "Daily":
-            self.current_streak = calculate_current_streak(self.db, self.name, self.habit_id)
-            return self.current_streak
-        if self.frequency == "Weekly":
-            self.current_streak = calculate_current_streak_weekly(self.db, self.name, self.start_date)
-            return self.current_streak
-
     def delete_habit(self):
         """Delete the habit from the database completely and remove from the habits list."""
         self.habit_id = get_primary_key(self.db, self.name)
@@ -228,3 +173,50 @@ class Habit:
     #     if self.frequency == "Weekly":
     #         self.longest_streak = calculate_longest_streak_weekly(self.db, self.name, self.start_date)
     #         return self.longest_streak
+
+    # Put in Analyses tab for now.
+    # @classmethod
+    # def monthly_habit_completion(cls, month: int):
+    #     """Get the number of completions for each habit in the last month, in ascending order.
+    #
+    #
+    #     parameters:
+    #        month(int): Numerical value of month for date retrieval.
+    #     returns:
+    #        list: Number of completion events for each habit in the last month separated by frequency.
+    #     """
+    #     # Not sure how to reduce code redundancy.
+    #
+    #     month = int(month)
+    #     if 1 <= month <= 12:
+    #
+    #         # First create a list of completion events for daily habits.
+    #         print("\nDaily Habits: Number of completion events in a month.")
+    #         daily_habits = [habit for habit in cls.habits if habit.frequency == "Daily"]
+    #         daily_habit_total = {}
+    #
+    #         for habit in daily_habits:
+    #             habit_id = get_primary_key(habit.db, habit.name)
+    #             dates = get_date_list(habit.db, habit_id)
+    #             month_check_offs = [check_off for check_off in dates if check_off.month == month]
+    #             daily_habit_total[habit.name] = len(month_check_offs)
+    #         sort_daily_habit_total = dict(sorted(daily_habit_total.items(), key=lambda x: x[1]))
+    #         for key, value in sort_daily_habit_total.items():
+    #             print(f"{key}: {value}")
+    #
+    #         # Second create a list of completion events for weekly habits.
+    #         print("\nWeekly Habits: Number of completion events in a month.")
+    #         weekly_habits = [habit for habit in cls.habits if habit.frequency == "Weekly"]
+    #         weekly_habit_total = {}
+    #
+    #         for habit in weekly_habits:
+    #             habit_id = get_primary_key(habit.db, habit.name)
+    #             dates = get_date_list(habit.db, habit_id)
+    #             month_check_offs = [check_off for check_off in dates if check_off.month == month]
+    #             weekly_habit_total[habit.name] = len(month_check_offs)
+    #         sort_weekly_habit_total = dict(sorted(weekly_habit_total.items(), key=lambda x: x[1]))
+    #         for key, value in sort_weekly_habit_total.items():
+    #             print(f"{key}: {value}")
+    #
+    #     else:
+    #         raise (ValueError("Please enter a valid month between 1 and 12."))

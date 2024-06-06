@@ -1,7 +1,7 @@
 import pytest
 from habit import Habit
 from db import get_primary_key
-from analyse import get_longest_streak
+from analyse import get_longest_streak, get_current_streak, monthly_habit_completion
 import os
 import random
 
@@ -63,16 +63,17 @@ def test_calculate_longest_streak_weekly(db, habit4, habit5):
     assert longest_streak_4 == "5 weeks"
     assert longest_streak_5 == "4 weeks"
 
-@pytest.mark.skip
+
 def test_calculate_current_streak_daily(db, habit1, habit2, habit3):
-    habit1.get_current_streak()
-    habit2.get_current_streak()
-    habit3.get_current_streak()
-    assert habit1.current_streak == 1
-    assert habit2.current_streak == 1
-    assert habit3.current_streak == 0
+    current_streak_1 = get_current_streak(db, habit1.name)
+    current_streak_2 = get_current_streak(db, habit2.name)
+    current_streak_3 = get_current_streak(db, habit3.name)
+    assert current_streak_1 == "1 days"
+    assert current_streak_2 == "1 days"
+    assert current_streak_3 == "0 days"
 
-
+# Need to determine a way to test the current streak for weekly habits,
+# where a day can be added within the last week of testing on the day of the week that counts towards the streak.
 
 @pytest.mark.skip
 def test_max_longest_streak(db, habit1dates, habit2dates, habit3dates, habit4dates, habit5dates, habit1,
@@ -80,14 +81,25 @@ def test_max_longest_streak(db, habit1dates, habit2dates, habit3dates, habit4dat
     Habit.max_longest_streak()
     assert "Python with 14 days", "Swimming with 5 weeks" in str(Habit.max_longest_streak())
 
-@pytest.mark.skip
-def test_monthly_habit_completion(db, habit1dates, habit2dates, habit3dates, habit4dates, habit5dates, habit1,
-                                  habit2, habit3, habit4, habit5):
-    list_completions = Habit.monthly_habit_completion(5)
-    monthly_habit_completions = ["Meditation: 22", "Swimming: 6", "Morning walk: 25", "Water plants: 6", "Swimming: 6"]
-    # Select an item randomly from the list, as unable to assert that all values are in the string returned.
-    selected_item = random.choice(monthly_habit_completions)
-    assert selected_item in str(list_completions)
+
+def test_monthly_habit_completion(db, caps):
+    """Test monthly habit check-offs by counting the number of dates in the database for each habit.
+    The number of dates should be equal to the number of completions for each habit.
+
+    The captured output is reviewed to see if certain portions of the string output are present using caps.readouterr().
+
+    parameters:
+        db: database conection
+        caps: CaptureFixture object
+    """
+    monthly_habit_completion(db, 5)
+    captured = caps.readouterr()
+    assert "Meditation: 22" in captured.out
+    assert "Swimming: 6" in captured.out
+    assert "Morning walk: 25" in captured.out
+    assert "Water plants: 6" in captured.out
+    assert "Python: 24" in captured.out
+
 
 @pytest.mark.skip
 def test_habit_deletion(db, habit1, habit2, habit3, habit4, habit5):
