@@ -8,6 +8,7 @@ from analyse import get_longest_streak, get_current_streak, monthly_habit_comple
 from operator import attrgetter
 ####How should you order your imports?
 
+
 def check_date(start_date):
     while True:
         try:
@@ -110,6 +111,17 @@ def cli():
             today_date = datetime.now().date()
             # Put both dates in the same format to compare.
 
+            # Inform user of when their weekly habit should be checked off.
+            weekly_list = [habit[0] for habit in list_of_habits_weekly(db)]
+
+            if habit_name in weekly_list:
+                start_date_day_of_week = calendar.day_name[start_date.weekday()]
+                print(f"\nJust so you know, {habit_name} is a weekly habit.\n\nTrying to do this activity the same day "
+                      f"each week\nwill help you to maintain your habit.\n\n"
+                      f"In order for check-off events to count toward\nyour current streak and longest streak,\n"
+                      f"you need to complete your habit on {start_date_day_of_week}s.\n")
+
+            # Check if the habit has started yet.
             try:
                 if today_date >= start_date:
                     today_date = datetime.strftime(today_date, "%Y-%m-%d %H:%M")
@@ -120,6 +132,7 @@ def cli():
                     raise ValueError(f"{habit.name} has not started yet. Please wait until {start_date}.")
             except ValueError:
                 print(f"\n{habit.name} has not started yet. Please wait until {start_date}.\n")
+
 
         elif choice == "Show List of Habits":
             next_choice = questionary.select("Would you like to see all habits or just "
@@ -193,14 +206,14 @@ def cli():
         elif choice == "Analyze Habit":
             analysis_choice = questionary.select("What would you like to analyze?",
                                                  choices=["Longest Streak of All Habits",
-                                                          "Last Months Habit Check-offs",
+                                                          "Check-off Events for a Specific Month",
                                                           "Current Streak for a Habit",
                                                           "Longest Streak for a Habit"]).ask()
 
             if analysis_choice == "Longest Streak of All Habits":
                 pass
 
-            if analysis_choice == "Last Months Habit Check-offs":
+            if analysis_choice == "Check-off Events for a Specific Month":
                 month = questionary.text("Enter the month you would like to analyze in the format of 1-12:").ask()
                 while True:
                     try:
