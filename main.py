@@ -1,8 +1,10 @@
 from habit import Habit
 import questionary
 from datetime import datetime, date
-from db import get_db, list_of_habits, list_of_habits_weekly, list_of_habits_daily, search_start_date
+from db import (get_db, list_of_habits, list_of_habits_weekly, list_of_habits_daily, search_start_date, reset_habit,
+                search_habit)
 from operator import attrgetter
+
 
 def check_date(start_date):
     while True:
@@ -21,9 +23,49 @@ def check_date(start_date):
         except ValueError:
             start_date = questionary.text("Please enter a date in the correct format: YYYY-MM-DD:").ask()
 
+
+def check_name(db, name):
+    while True:
+        try:
+            name = (name.lower()).capitalize()
+            result = search_habit(db, name)
+            if not name:
+                raise ValueError
+            if name == "":
+                raise ValueError
+            if name.startswith(" "):
+                raise ValueError
+            if name.isdigit():
+                raise ValueError
+            if name != result:
+                return name
+            if result == name:
+                raise ValueError
+        except ValueError:
+            name = questionary.text("Please enter a different name for your habit.  It either already "
+                                    "exists or is not in the correct format.").ask()
+
+
+def check_description(description):
+    while True:
+        try:
+            if not description:
+                raise ValueError
+            if description == "":
+                raise ValueError
+            if description.startswith(" "):
+                raise ValueError
+            if description.isdigit():
+                raise ValueError
+            else:
+                return description
+        except ValueError:
+            description = questionary.text("Please enter a different description that is meaningful to your habit.").ask()
+
+
 def cli():
     while True:
-        db = get_db("test.db")
+        db = get_db("main.db")
 
         choice = questionary.select("What would you like to do?",
                                     choices=["Create Habit", "Check Off Habit", "Show List of Habits", "Analyze Habit",
@@ -31,7 +73,11 @@ def cli():
 
         if choice == "Create Habit":
             name = questionary.text("What is the name of your habit?").ask()
+            name = check_name(db, name)
+
             description = questionary.text("What are you hoping your habit will improve?").ask()
+            description = check_description(description)
+
             frequency = str(questionary.select("Choose the frequency of the habit",
                                                ["Daily", "Weekly"]).ask())
             start_date = questionary.select("When would you like your habit to start?",
@@ -46,7 +92,7 @@ def cli():
                 check_date(start_date)  # Check if the date is in the future
             habit = Habit(name, description, frequency, start_date)
             habit.save_habit()
-            print(f"{habit}")
+            print(f"\nPlease review the information you entered for your habit:\n\n{habit}\n")
 
         elif choice == "Check Off Habit":
             habits = [habit[0] for habit in list_of_habits(db)]
@@ -127,7 +173,7 @@ def cli():
             if change_start_date == "Change to today.":
                 start_date = date.today()
                 start_date = datetime.strftime(start_date, "%Y-%m-%d")
-                habit.reset_habit(start_date)
+                reset_habit(db, habit_name, start_date)
                 print("The start date has been changed to today.")
 
             elif change_start_date == "Stay the same.":
@@ -138,7 +184,7 @@ def cli():
                 start_date = questionary.text("Enter the date you would like to restart your habit in the "
                                               "format YYYY-MM-DD:").ask()
                 check_date(start_date)  # Check if the date is in the future
-                habit.reset_habit(start_date)
+                reset_habit(db, habit_name, start_date)
 
             print(f"{habit.name} has been reset.")
 

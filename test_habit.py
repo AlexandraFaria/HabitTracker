@@ -85,7 +85,7 @@ def test_monthly_habit_completion(db, habit1dates, habit2dates, habit3dates, hab
     selected_item = random.choice(monthly_habit_completions)
     assert selected_item in str(list_completions)
 
-@pytest.mark.skip
+
 def test_habit_deletion(db, habit1, habit2, habit3, habit4, habit5):
     habit1.delete_habit()
     habit2.delete_habit()

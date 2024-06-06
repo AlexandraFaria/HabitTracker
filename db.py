@@ -201,9 +201,10 @@ def delete_habit(db, habit_id=None):
     db.commit()
 
 
-def reset_habit(db, habit_id=None, start_date=None):
-    """This function deletes all of the previously entered dates, and resets the start date."""
+def reset_habit(db, name, start_date=None):
+    """This function deletes all previously entered completion dates, and resets the start date."""
     cur = db.cursor()
+    habit_id = get_primary_key(db, name)
     cur.execute("DELETE FROM habit_completion_dates WHERE habit_id = ?", (habit_id,))
     cur.execute("UPDATE habit_metadata SET start_date = ? WHERE habit_id = ?", (start_date, habit_id))
     db.commit()

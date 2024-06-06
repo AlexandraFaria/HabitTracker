@@ -95,6 +95,7 @@ class Habit:
            self.longest_streak(int): Longest streak of the habit.
         """
         self.name = (name.lower()).capitalize()
+        # Capitalize the first letter of the habit name. (For consistency with test database.)
         self.description = description
         self.frequency = frequency
         self.start_date = start_date
@@ -126,20 +127,20 @@ class Habit:
 
 
         """
-        result = search_habit(self.db, self.name)
-        if result == self.name:
-            print(f"{self.name} already exists.")
-
-        else:
-            add_habit(self.db, self.name, self.description, self.frequency, self.start_date)
-            self.habit_id = get_primary_key(self.db, self.name)
-            return self.habit_id
+        # result = search_habit(self.db, self.name)
+        # if result == self.name:
+        #     print(f"{self.name} already exists.")
+        #
+        # else:
+        add_habit(self.db, self.name, self.description, self.frequency, self.start_date)
+        self.habit_id = get_primary_key(self.db, self.name)
+        return self.habit_id
 
     @staticmethod
     def check_date_input_past(completion_date):
         """
        Check if the date is in the correct format and not in the future.
-
+       This is more so for the test data, because the CLI will only allow a completion date of today's date.
 
        argument:
            completion_date(str): Date the habit was completed.
@@ -209,12 +210,6 @@ class Habit:
             self.current_streak = calculate_current_streak_weekly(self.db, self.name, self.start_date)
             return self.current_streak
 
-    def reset_habit(self, start_date=None):
-        """Reset the habit by deleting all completion dates and add a new start date."""
-        self.habit_id = get_primary_key(self.db, self.name)
-        reset_habit(self.db, self.habit_id, start_date)
-        self.start_date = start_date
-        return self.start_date
 
     def delete_habit(self):
         """Delete the habit from the database completely and remove from the habits list."""
@@ -222,3 +217,11 @@ class Habit:
         delete_habit(self.db, self.habit_id)
         self.habits.remove(self)
         return self.habits
+
+# This function is not needed in the habit class, because I can bypass and just use the db.py reset_habit function.
+    # def reset_habit(self, start_date=None):
+    #     """Reset the habit by deleting all completion dates and add a new start date."""
+    #     self.habit_id = get_primary_key(self.db, self.name)
+    #     reset_habit(self.db, self.habit_id, start_date)
+    #     self.start_date = start_date
+    #     return self.start_date
