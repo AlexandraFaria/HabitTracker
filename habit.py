@@ -192,15 +192,6 @@ class Habit:
             self.habit_id = get_primary_key(self.db, self.name)
             add_habit_completion(self.db, self.habit_id, completion_date)
 
-    def get_longest_streak(self):
-        """Get the longest streak of the habit."""
-        if self.frequency == "Daily":
-            self.longest_streak = calculate_longest_streak(self.db, self.name)
-            return self.longest_streak
-        if self.frequency == "Weekly":
-            self.longest_streak = calculate_longest_streak_weekly(self.db, self.name, self.start_date)
-            return self.longest_streak
-
     def get_current_streak(self):
         """Get the current streak of the habit."""
         if self.frequency == "Daily":
@@ -210,7 +201,6 @@ class Habit:
             self.current_streak = calculate_current_streak_weekly(self.db, self.name, self.start_date)
             return self.current_streak
 
-
     def delete_habit(self):
         """Delete the habit from the database completely and remove from the habits list."""
         self.habit_id = get_primary_key(self.db, self.name)
@@ -219,9 +209,22 @@ class Habit:
         return self.habits
 
 # This function is not needed in the habit class, because I can bypass and just use the db.py reset_habit function.
+
     # def reset_habit(self, start_date=None):
     #     """Reset the habit by deleting all completion dates and add a new start date."""
     #     self.habit_id = get_primary_key(self.db, self.name)
     #     reset_habit(self.db, self.habit_id, start_date)
     #     self.start_date = start_date
     #     return self.start_date
+
+# This function is not needed in the habit class, because I can bypass and just use the db.py
+# get_longest_streak function.
+
+    # def get_longest_streak(self):
+    #     """Get the longest streak of the habit."""
+    #     if self.frequency == "Daily":
+    #         self.longest_streak = calculate_longest_streak(self.db, self.name)
+    #         return self.longest_streak
+    #     if self.frequency == "Weekly":
+    #         self.longest_streak = calculate_longest_streak_weekly(self.db, self.name, self.start_date)
+    #         return self.longest_streak
