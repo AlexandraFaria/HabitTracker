@@ -197,6 +197,41 @@ def monthly_habit_completion(db, month):
             print(f"{key}: {value}")
 
 
+def max_longest_streak(db):
+    """Get the habit with the longest streak for daily and weekly habits."""
+
+    print("\nDaily Habits:\n")
+    daily_list = [habit[0] for habit in list_of_habits_daily(db)]
+    if not daily_list:
+        print("\nYou have no habits logged to analyze.\n")
+    else:
+        daily_habit_longest_streak = {}
+
+        for habit in daily_list:
+            longest_streak = calculate_longest_streak(db, habit)
+            daily_habit_longest_streak[habit] = longest_streak
+        maximum_daily_streak = max(daily_habit_longest_streak, key=daily_habit_longest_streak.get)
+        print(f"Daily Habit with Longest Streak: {maximum_daily_streak} with "
+              f"{daily_habit_longest_streak[maximum_daily_streak]} days.\n")
+
+    print("Weekly Habits:\n")
+    weekly_list = [habit[0] for habit in list_of_habits_weekly(db)]
+    if not weekly_list:
+        print("\nYou have no habits logged to analyze.\n")
+    else:
+        weekly_habit_longest_streak = {}
+
+        for habit in weekly_list:
+            start_date = search_start_date(db, habit)
+            longest_streak = calculate_longest_streak_weekly(db, habit, start_date)
+            weekly_habit_longest_streak[habit] = longest_streak
+        maximum_weekly_streak = max(weekly_habit_longest_streak, key=weekly_habit_longest_streak.get)
+        print(f"Weekly Habit with Longest Streak: {maximum_weekly_streak} with "
+              f"{weekly_habit_longest_streak[maximum_weekly_streak]} weeks.\n")
+
+# We could reduce the redundant code, by having the list include all data about the habit, including the start date.
+
+
 # def calculate_longest_streak(db, name, habit_id=None):
 #     """Calculate the longest streak by comparing current streak to the longest streak."""
 #

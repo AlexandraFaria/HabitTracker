@@ -3,8 +3,8 @@ import questionary
 from datetime import datetime, date
 import calendar
 from db import (get_db, list_of_habits, list_of_habits_weekly, list_of_habits_daily, search_start_date, reset_habit,
-                search_habit)
-from analyse import get_longest_streak, get_current_streak, monthly_habit_completion
+                search_habit, delete_habit)
+from analyse import get_longest_streak, get_current_streak, monthly_habit_completion, max_longest_streak
 from operator import attrgetter
 ####How should you order your imports?
 
@@ -133,7 +133,6 @@ def cli():
             except ValueError:
                 print(f"\n{habit.name} has not started yet. Please wait until {start_date}.\n")
 
-
         elif choice == "Show List of Habits":
             next_choice = questionary.select("Would you like to see all habits or just "
                                              "the daily or weekly habits?", choices=["All", "Daily", "Weekly"]).ask()
@@ -145,6 +144,7 @@ def cli():
                     continue
                 for habit in habits:
                     print(habit[0])
+
             elif next_choice == "Daily":
                 print("\nHere is a list of all your current daily habits:\n")
                 habits = list_of_habits_daily(db)
@@ -153,6 +153,7 @@ def cli():
                     continue
                 for habit in habits:
                     print(habit[0])
+
             elif next_choice == "Weekly":
                 print("\nHere is a list of all your current weekly habits:\n")
                 habits = list_of_habits_weekly(db)
@@ -168,9 +169,8 @@ def cli():
                 print("\nYou have no habits logged to delete.\n")
                 continue
             habit = questionary.select("Which habit would you like to delete?:", habits).ask()
-            habit = Habit(habit)
-            habit.delete_habit()
-            print(f"\n{habit.name} has been deleted.\n")
+            delete_habit(db, habit)
+            print(f"\n{habit} has been deleted.\n")
 
         elif choice == "Reset Habit":
             habits = [habit[0] for habit in list_of_habits(db)]
@@ -211,7 +211,7 @@ def cli():
                                                           "Longest Streak for a Habit"]).ask()
 
             if analysis_choice == "Longest Streak of All Habits":
-                pass
+                max_longest_streak(db)
 
             if analysis_choice == "Check-off Events for a Specific Month":
                 month = questionary.text("Enter the month you would like to analyze in the format of 1-12:").ask()
@@ -229,10 +229,6 @@ def cli():
                 month_name = calendar.month_name[month]
                 print(f"\nHere is a list of all the habits you completed in {month_name}:\n")
                 monthly_habit_completion(db, month)
-
-
-    # Need to have a message if there are no habits that have been completed.
-    # Need to have a message returned for a list of all the habits that have been completed.
 
             if analysis_choice == "Current Streak for a Habit":
                 habits = [habit[0] for habit in list_of_habits(db)]

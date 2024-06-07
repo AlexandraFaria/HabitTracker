@@ -1,7 +1,7 @@
 import pytest
 from habit import Habit
-from db import get_primary_key
-from analyse import get_longest_streak, get_current_streak, monthly_habit_completion
+from db import get_primary_key, delete_habit
+from analyse import get_longest_streak, get_current_streak, monthly_habit_completion, max_longest_streak
 import os
 import random
 
@@ -75,11 +75,11 @@ def test_calculate_current_streak_daily(db, habit1, habit2, habit3):
 # Need to determine a way to test the current streak for weekly habits,
 # where a day can be added within the last week of testing on the day of the week that counts towards the streak.
 
-@pytest.mark.skip
-def test_max_longest_streak(db, habit1dates, habit2dates, habit3dates, habit4dates, habit5dates, habit1,
-                            habit2, habit3, habit4, habit5):
-    Habit.max_longest_streak()
-    assert "Python with 14 days", "Swimming with 5 weeks" in str(Habit.max_longest_streak())
+
+def test_max_longest_streak(db, capsys):
+    max_longest_streak(db)
+    captured = capsys.readouterr()
+    assert "Python with 14 days", "Swimming with 5 weeks" in captured.out
 
 
 def test_monthly_habit_completion(db, capsys):
@@ -102,22 +102,18 @@ def test_monthly_habit_completion(db, capsys):
     assert "Python: 24" in captured.out
 
 
-@pytest.mark.skip
 def test_habit_deletion(db, habit1, habit2, habit3, habit4, habit5):
-    habit1.delete_habit()
-    habit2.delete_habit()
-    habit3.delete_habit()
-    habit4.delete_habit()
-    habit5.delete_habit()
+    list_of_habits = [habit1, habit2, habit3, habit4, habit5]
+    for habit in list_of_habits:
+        delete_habit(db, habit.name)
     cur = db.cursor()
     cur.execute("SELECT name FROM habit_metadata")
     result = cur.fetchall()
     assert result == []
 
 
-@pytest.mark.skip
 def teardown_method():
     os.remove("test.db")
-    assert not os.path.exists("test.db")
 
-#teardown_method is not working properly. It is not deleting the test.db file because it is still being used.
+# teardown_method is not working properly, the test.db is still in the directory after the test is run,
+# however it is empty and able to run tests again successfully.

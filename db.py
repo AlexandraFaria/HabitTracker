@@ -192,10 +192,11 @@ def get_date_list(db, habit_id):
     return dates
 
 
-def delete_habit(db, habit_id=None):
+def delete_habit(db, name):
     """Deletes the habit from the habit_metadata table, and all dates from the
     habit_completion_dates table."""
     cur = db.cursor()
+    habit_id = get_primary_key(db, name)
     cur.execute("DELETE FROM habit_completion_dates WHERE habit_id = ?", (habit_id,))
     cur.execute("DELETE FROM habit_metadata WHERE habit_id = ?", (habit_id,))
     db.commit()

@@ -13,25 +13,6 @@ class Habit:
     """This is the Habit Class and associated methods."""
 
     Database = "test.db"
-    habits = []
-
-    @classmethod
-    def max_longest_streak(cls):
-        """Get the habit with the longest streak for daily and weekly habits."""
-
-        for habit in cls.habits:
-            habit.get_longest_streak()
-
-        daily_habits = [habit for habit in cls.habits if habit.frequency == "Daily"]
-        maximum_daily_streak = max(daily_habits, key=attrgetter('longest_streak'))
-
-        weekly_habits = [habit for habit in cls.habits if habit.frequency == "Weekly"]
-        maximum_weekly_streak = max(weekly_habits, key=attrgetter('longest_streak'))
-
-        return (f"\nDaily Habit with longest streak: "
-                f"{maximum_daily_streak.name} with {maximum_daily_streak.longest_streak} days.\n"
-                f"\nWeekly Habit with longest streak: {maximum_weekly_streak.name} "
-                f"with {maximum_weekly_streak.longest_streak} weeks.")
 
     def __init__(self, name: str = None, description: str = None, frequency: str = None, start_date: date = None):
         """
@@ -54,10 +35,11 @@ class Habit:
         self.frequency = frequency
         self.start_date = start_date
         self.habit_id = None
-        self.current_streak = 0
-        self.longest_streak = 0
         self.db = get_db(self.Database)
-        self.habits.append(self) if self not in self.habits else None
+        # self.current_streak = 0
+        # self.longest_streak = 0
+        # self.habits.append(self) if self not in self.habits else None
+        # These attributes are not needed, because I can bypass and just use the db.py and analyse.py
 
     def __str__(self):
         """
@@ -118,7 +100,8 @@ class Habit:
 
     @staticmethod
     def check_month(month):
-        """Check the input of a month to make sure it is an integer and between 1-12"""
+        """Check the input of a month to make sure it is an integer and between 1-12, this is more for
+        testing in pytest than for the CLI"""
         month = int(month)
         if 1 <= month <= 12:
             return month
@@ -146,12 +129,38 @@ class Habit:
             self.habit_id = get_primary_key(self.db, self.name)
             add_habit_completion(self.db, self.habit_id, completion_date)
 
-    def delete_habit(self):
-        """Delete the habit from the database completely and remove from the habits list."""
-        self.habit_id = get_primary_key(self.db, self.name)
-        delete_habit(self.db, self.habit_id)
-        self.habits.remove(self)
-        return self.habits
+
+
+# This function is not needed in the habit class, because I can bypass and just use the db.py
+    # def delete_habit(self):
+    #     """Delete the habit from the database completely and remove from the habits list."""
+    #     self.habit_id = get_primary_key(self.db, self.name)
+    #     delete_habit(self.db, self.habit_id)
+    #     # self.habits.remove(self)
+    #     # return self.habits
+
+
+# This function is not needed in the habit class, because I can bypass and just use the db.py and analyse.py
+    # habits = []
+    #
+    # @classmethod
+    # def max_longest_streak(cls):
+    #     """Get the habit with the longest streak for daily and weekly habits."""
+    #
+    #     for habit in cls.habits:
+    #         habit.get_longest_streak()
+    #
+    #     daily_habits = [habit for habit in cls.habits if habit.frequency == "Daily"]
+    #     maximum_daily_streak = max(daily_habits, key=attrgetter('longest_streak'))
+    #
+    #     weekly_habits = [habit for habit in cls.habits if habit.frequency == "Weekly"]
+    #     maximum_weekly_streak = max(weekly_habits, key=attrgetter('longest_streak'))
+    #
+    #     return (f"\nDaily Habit with longest streak: "
+    #             f"{maximum_daily_streak.name} with {maximum_daily_streak.longest_streak} days.\n"
+    #             f"\nWeekly Habit with longest streak: {maximum_weekly_streak.name} "
+    #             f"with {maximum_weekly_streak.longest_streak} weeks.")
+
 
 # This function is not needed in the habit class, because I can bypass and just use the db.py reset_habit function.
 
