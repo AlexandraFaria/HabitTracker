@@ -82,18 +82,19 @@ def test_max_longest_streak(db, habit1dates, habit2dates, habit3dates, habit4dat
     assert "Python with 14 days", "Swimming with 5 weeks" in str(Habit.max_longest_streak())
 
 
-def test_monthly_habit_completion(db, caps):
+def test_monthly_habit_completion(db, capsys):
     """Test monthly habit check-offs by counting the number of dates in the database for each habit.
     The number of dates should be equal to the number of completions for each habit.
 
-    The captured output is reviewed to see if certain portions of the string output are present using caps.readouterr().
+    The captured output is reviewed to see if certain portions of the string output are present using
+    capsys.readouterr().
 
     parameters:
-        db: database conection
+        db: database connection
         caps: CaptureFixture object
     """
     monthly_habit_completion(db, 5)
-    captured = caps.readouterr()
+    captured = capsys.readouterr()
     assert "Meditation: 22" in captured.out
     assert "Swimming: 6" in captured.out
     assert "Morning walk: 25" in captured.out
