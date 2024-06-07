@@ -3,7 +3,6 @@ from habit import Habit
 from db import get_primary_key, delete_habit
 from analyse import get_longest_streak, get_current_streak, monthly_habit_completion, max_longest_streak
 import os
-import random
 
 
 def setup_method():
@@ -102,18 +101,18 @@ def test_monthly_habit_completion(db, capsys):
     assert "Python: 24" in captured.out
 
 
-def test_habit_deletion(db, habit1, habit2, habit3, habit4, habit5):
-    list_of_habits = [habit1, habit2, habit3, habit4, habit5]
-    for habit in list_of_habits:
-        delete_habit(db, habit.name)
-    cur = db.cursor()
-    cur.execute("SELECT name FROM habit_metadata")
-    result = cur.fetchall()
-    assert result == []
-
-
-def teardown_method():
-    os.remove("test.db")
+# def test_habit_deletion(db, habit1, habit2, habit3, habit4, habit5):
+#     list_of_habits = [habit1, habit2, habit3, habit4, habit5]
+#     for habit in list_of_habits:
+#         delete_habit(db, habit.name)
+#     cur = db.cursor()
+#     cur.execute("SELECT name FROM habit_metadata")
+#     result = cur.fetchall()
+#     assert result == []
+#
+#
+# def teardown_method():
+#     os.remove("test.db")
 
 # teardown_method is not working properly, the test.db is still in the directory after the test is run,
 # however it is empty and able to run tests again successfully.

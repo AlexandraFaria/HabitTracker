@@ -11,12 +11,11 @@ def calculate_longest_streak(db, name):
     """Calculate the longest streak by comparing current streak to the longest streak."""
 
     habit_id = get_primary_key(db, name)
+    dates = get_date_list(db, habit_id)
 
-    if habit_id is None:
-        print(f"Habit {name} has not yet added any completion dates.")
+    if not dates:
+        return 0
     else:
-        dates = get_date_list(db, habit_id)
-
         longest_streak = 1
         current_reviewed_streak = 1
 
@@ -37,13 +36,11 @@ def calculate_longest_streak_weekly(db, name, start_date):
     """Calculate the longest streak by comparing current streak to the longest streak."""
 
     habit_id = get_primary_key(db, name)
+    dates = get_date_list(db, habit_id)
 
-    if habit_id is None:
-        print(f"Habit {name} has not yet added any completion dates.")
-
+    if not dates:
+        return 0
     else:
-        dates = get_date_list(db, habit_id)
-
         start_date = datetime.strptime(start_date, "%Y-%m-%d")
         day_of_week = start_date.weekday()
 
@@ -86,11 +83,13 @@ def calculate_current_streak(db, name):
 
     today = date.today()
 
-    if habit_id is None:
-        print(f"Habit {name} has not yet added any completion dates.")
-    else:
-        dates = get_date_list(db, habit_id)
+    habit_id = get_primary_key(db, name)
+    dates = get_date_list(db, habit_id)
 
+    if not dates:
+        print(f"Habit {name} has not yet added any completion dates.")
+        return 0
+    else:
         current_streak = 0
 
         if dates[0] == today:
@@ -112,18 +111,15 @@ def calculate_current_streak_weekly(db, name, start_date):
     """Calculate the longest streak by comparing current streak to the longest streak."""
 
     habit_id = get_primary_key(db, name)
-
     today = date.today()
+    dates = get_date_list(db, habit_id)
 
-    if habit_id is None:
+    if not dates:
         print(f"Habit {name} has not yet added any completion dates.")
-
+        return 0
     else:
-        dates = get_date_list(db, habit_id)
-
         start_date = datetime.strptime(start_date, "%Y-%m-%d")
         day_of_week = start_date.weekday()
-
         filtered_list = list(filter(lambda x: (x.weekday() == day_of_week), dates))
 
         current_streak = 1
@@ -155,6 +151,8 @@ def get_current_streak(db, name):
         return f"{current_streak} weeks"
 
 
+# Need to improve data redundancy in the following functions. The code is repetitive and can be improved.
+
 def monthly_habit_completion(db, month):
     """Get the number of completions for each habit in the last month, in ascending order.
 
@@ -166,6 +164,7 @@ def monthly_habit_completion(db, month):
     """
     print("Daily Habits:\n")
     daily_list = [habit[0] for habit in list_of_habits_daily(db)]
+
     if not daily_list:
         print("\nYou have no habits logged to analyze.\n")
     else:
@@ -182,6 +181,7 @@ def monthly_habit_completion(db, month):
 
     print("\nWeekly Habits:\n")
     weekly_list = [habit[0] for habit in list_of_habits_weekly(db)]
+
     if not weekly_list:
         print("\nYou have no habits logged to analyze.\n")
     else:
@@ -228,123 +228,4 @@ def max_longest_streak(db):
         maximum_weekly_streak = max(weekly_habit_longest_streak, key=weekly_habit_longest_streak.get)
         print(f"Weekly Habit with Longest Streak: {maximum_weekly_streak} with "
               f"{weekly_habit_longest_streak[maximum_weekly_streak]} weeks.\n")
-
-# We could reduce the redundant code, by having the list include all data about the habit, including the start date.
-
-
-# def calculate_longest_streak(db, name, habit_id=None):
-#     """Calculate the longest streak by comparing current streak to the longest streak."""
-#
-#     habit_id = get_primary_key(db, name)
-#
-#     if habit_id is None:
-#         print(f"Habit {name} has not yet added any completion dates.")
-#     else:
-#         dates = get_date_list(db, habit_id)
-#
-#         longest_streak = 1
-#         current_reviewed_streak = 1
-#
-#         for i in range(1, len(dates)):
-#             if dates[i] == dates[i - 1] - timedelta(days=1):
-#                 current_reviewed_streak += 1
-#             elif dates[i] == dates[i - 1]:
-#                 continue
-#             else:
-#                 longest_streak = max(longest_streak, current_reviewed_streak)
-#                 current_reviewed_streak = 1
-#
-#         longest_streak = max(current_reviewed_streak, longest_streak)
-#         return longest_streak
-#
-#
-# def calculate_current_streak(db, name, habit_id=None):
-#     """Calculate the current streak of the habit, if there is a completion date with today's date."""
-#
-#     habit_id = get_primary_key(db, name)
-#
-#     today = date.today()
-#
-#     if habit_id is None:
-#         print(f"Habit {name} has not yet added any completion dates.")
-#     else:
-#         dates = get_date_list(db, habit_id)
-#
-#         current_streak = 0
-#
-#         if dates[0] == today:
-#             current_streak += 1
-#             for i in range(1, len(dates)):
-#                 if dates[i] == dates[i - 1] - timedelta(days=1):
-#                     current_streak += 1
-#                 elif dates[i] == dates[i - 1]:
-#                     continue
-#                 else:
-#                     break
-#         else:
-#             current_streak = 0
-#
-#         return current_streak
-#
-#
-# def calculate_longest_streak_weekly(db, name, start_date, habit_id=None):
-#     """Calculate the longest streak by comparing current streak to the longest streak."""
-#
-#     habit_id = get_primary_key(db, name)
-#
-#     if habit_id is None:
-#         print(f"Habit {name} has not yet added any completion dates.")
-#
-#     else:
-#         dates = get_date_list(db, habit_id)
-#
-#         start_date = datetime.strptime(start_date, "%Y-%m-%d")
-#         day_of_week = start_date.weekday()
-#
-#         filtered_list = list(filter(lambda x: (x.weekday() == day_of_week), dates))
-#
-#         current_reviewed_streak = 1
-#         longest_streak = 1
-#
-#         for i in (range(1, len(filtered_list))):
-#             if filtered_list[i] == filtered_list[i - 1] - timedelta(weeks=1):
-#                 current_reviewed_streak += 1
-#                 longest_streak = max(longest_streak, current_reviewed_streak)
-#             else:
-#                 current_reviewed_streak = 1
-#
-#         longest_streak = max(longest_streak, current_reviewed_streak)
-#         return longest_streak
-#
-#
-# def calculate_current_streak_weekly(db, name, start_date, habit_id=None):
-#     """Calculate the longest streak by comparing current streak to the longest streak."""
-#
-#     habit_id = get_primary_key(db, name)
-#
-#     today = date.today()
-#
-#     if habit_id is None:
-#         print(f"Habit {name} has not yet added any completion dates.")
-#
-#     else:
-#         dates = get_date_list(db, habit_id)
-#
-#         start_date = datetime.strptime(start_date, "%Y-%m-%d")
-#         day_of_week = start_date.weekday()
-#
-#         filtered_list = list(filter(lambda x: (x.weekday() == day_of_week), dates))
-#
-#         current_streak = 1
-#
-#         if filtered_list[0] >= today - timedelta(weeks=1):
-#             for i in (range(1, len(filtered_list))):
-#                 if filtered_list[i] == filtered_list[i - 1] - timedelta(weeks=1):
-#                     current_streak += 1
-#                 else:
-#                     break
-#         else:
-#             current_streak = 0
-#
-#         return current_streak
 

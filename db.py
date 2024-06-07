@@ -1,5 +1,5 @@
 import sqlite3
-from datetime import date, datetime, timedelta
+from datetime import datetime
 
 
 def get_db(name="main.db"):
@@ -25,7 +25,6 @@ def create_tables(db):
 
     cur = db.cursor()
 
-
     cur.execute("""CREATE TABLE IF NOT EXISTS habit_metadata (
         habit_id INTEGER PRIMARY KEY,
         name TEXT,
@@ -44,7 +43,6 @@ def create_tables(db):
     db.commit()
 
 
-
 def add_habit(db, name, description, frequency, start_date):
     """Add a habit to the database.
 
@@ -61,7 +59,6 @@ def add_habit(db, name, description, frequency, start_date):
     db.commit()
 
 
-
 def get_primary_key(db, name):
     """Get the primary key of the habit from the parent table habit_metadata
 
@@ -74,7 +71,6 @@ def get_primary_key(db, name):
     cur = db.cursor()
     result = cur.execute("""SELECT habit_id FROM habit_metadata WHERE name = ?""", (name,))
     return result.fetchone()[0]
-
 
 
 def add_habit_completion(db, habit_id, completion_date=None):
@@ -113,6 +109,7 @@ def search_habit(db, name):
     except TypeError:
         return None
 
+
 def search_start_date(db, name):
     """Search for a habit in the habit_metadata table by name and return the start date.
 
@@ -149,6 +146,7 @@ def list_of_habits(db):
     except TypeError:
         return None
 
+
 def list_of_habits_daily(db):
     """Provides a list of habits that are to be done daily.
 
@@ -162,6 +160,7 @@ def list_of_habits_daily(db):
         return result.fetchall()
     except TypeError:
         return None
+
 
 def list_of_habits_weekly(db):
     """Provides a list of habits that are to be done weekly.
@@ -181,7 +180,7 @@ def list_of_habits_weekly(db):
 def get_date_list(db, habit_id):
     cur = db.cursor()
     result = cur.execute("""SELECT habit_id, completion_date FROM habit_completion_dates WHERE habit_id = ?""",
-                        (habit_id,))
+                         (habit_id,))
     date_list = result.fetchall()
 
     dates = []
@@ -209,8 +208,6 @@ def reset_habit(db, name, start_date=None):
     cur.execute("DELETE FROM habit_completion_dates WHERE habit_id = ?", (habit_id,))
     cur.execute("UPDATE habit_metadata SET start_date = ? WHERE habit_id = ?", (start_date, habit_id))
     db.commit()
-
-
 
 
 # import sqlite3

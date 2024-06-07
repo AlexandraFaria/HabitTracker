@@ -5,8 +5,7 @@ import calendar
 from db import (get_db, list_of_habits, list_of_habits_weekly, list_of_habits_daily, search_start_date, reset_habit,
                 search_habit, delete_habit)
 from analyse import get_longest_streak, get_current_streak, monthly_habit_completion, max_longest_streak
-from operator import attrgetter
-####How should you order your imports?
+# How should you order your imports?
 
 
 def check_date(start_date):
@@ -63,7 +62,8 @@ def check_description(description):
             else:
                 return description
         except ValueError:
-            description = questionary.text("Please enter a different description that is meaningful to your habit.").ask()
+            description = questionary.text("Please enter a different description that is meaningful to your habit."
+                                           ).ask()
 
 
 def cli():
@@ -82,9 +82,13 @@ def cli():
             description = check_description(description)
 
             frequency = str(questionary.select("Choose the frequency of the habit",
-                                               ["Daily", "Weekly"]).ask())
+                                               ["Daily", "Weekly", "Exit"]).ask())
+            if frequency == "Exit":
+                print(f"Your habit {name} was not created.")
+                continue
+
             start_date = questionary.select("When would you like your habit to start?",
-                                            choices=["Today", "A day in the Future"]).ask()
+                                            choices=["Today", "A day in the Future", "Exit"]).ask()
             if start_date == "Today":
                 start_date = date.today()
                 # The date will be today's date
@@ -93,49 +97,61 @@ def cli():
                 start_date = questionary.text("Enter the date you would like to start your "
                                               "habit in the format YYYY-MM-DD:").ask()
                 check_date(start_date)  # Check if the date is in the future
+
+            elif start_date == "Exit":
+                print(f"Your habit {name} was not created.")
+                continue
+
             habit = Habit(name, description, frequency, start_date)
             habit.save_habit()
             print(f"\nPlease review the information you entered for your habit:\n\n{habit}\n")
 
         elif choice == "Check Off Habit":
             habits = [habit[0] for habit in list_of_habits(db)]
+
             if not habits:
                 print("\nYou have no habits to check off.\n")
                 continue
-            habit_name = questionary.select("Which habit would you like to check off?", habits).ask()
-            habit = Habit(habit_name)
-            start_date = search_start_date(db, habit_name)
-            # The start_date needs to be retrieved from the database.
-
-            start_date = datetime.strptime(start_date, "%Y-%m-%d").date()
-            today_date = datetime.now().date()
-            # Put both dates in the same format to compare.
-
-            # Inform user of when their weekly habit should be checked off.
-            weekly_list = [habit[0] for habit in list_of_habits_weekly(db)]
-
-            if habit_name in weekly_list:
-                start_date_day_of_week = calendar.day_name[start_date.weekday()]
-                print(f"\nJust so you know, {habit_name} is a weekly habit.\n\nTrying to do this activity the same day "
-                      f"each week\nwill help you to maintain your habit.\n\n"
-                      f"In order for check-off events to count toward\nyour current streak and longest streak,\n"
-                      f"you need to complete your habit on {start_date_day_of_week}s.\n")
-
-            # Check if the habit has started yet.
-            try:
-                if today_date >= start_date:
-                    today_date = datetime.strftime(today_date, "%Y-%m-%d %H:%M")
-                    # Put date into string format before saving.
-                    habit.add_habit_completion_date(today_date)
-                    print(f"\n{habit.name} has been checked off.\n")
+            else:
+                habits.append("Exit")
+                habit_name = questionary.select("Which habit would you like to check off?", habits).ask()
+                if habit_name == "Exit":
+                    continue
                 else:
-                    raise ValueError(f"{habit.name} has not started yet. Please wait until {start_date}.")
-            except ValueError:
-                print(f"\n{habit.name} has not started yet. Please wait until {start_date}.\n")
+                    habit = Habit(habit_name)
+                    start_date = search_start_date(db, habit_name)
+                    # The start_date needs to be retrieved from the database.
+
+                    start_date = datetime.strptime(start_date, "%Y-%m-%d").date()
+                    today_date = datetime.now().date()
+                    # Put both dates in the same format to compare.
+
+                    # Inform user of when their weekly habit should be checked off.
+                    weekly_list = [habit[0] for habit in list_of_habits_weekly(db)]
+
+                if habit_name in weekly_list:
+                    start_date_day_of_week = calendar.day_name[start_date.weekday()]
+                    print(f"\nJust so you know, {habit_name} is a weekly habit.\n\nTrying to do this activity the same day "
+                          f"each week\nwill help you to maintain your habit.\n\n"
+                          f"In order for check-off events to count toward\nyour current streak and longest streak,\n"
+                          f"you need to complete your habit on {start_date_day_of_week}s.\n")
+
+                # Check if the habit has started yet.
+                try:
+                    if today_date >= start_date:
+                        today_date = datetime.strftime(today_date, "%Y-%m-%d %H:%M")
+                        # Put date into string format before saving.
+                        habit.add_habit_completion_date(today_date)
+                        print(f"\n{habit.name} has been checked off.\n")
+                    else:
+                        raise ValueError(f"{habit.name} has not started yet. Please wait until {start_date}.")
+                except ValueError:
+                    print(f"\n{habit.name} has not started yet. Please wait until {start_date}.\n")
 
         elif choice == "Show List of Habits":
             next_choice = questionary.select("Would you like to see all habits or just "
-                                             "the daily or weekly habits?", choices=["All", "Daily", "Weekly"]).ask()
+                                             "the daily or weekly habits?", choices=["All", "Daily", "Weekly", "Exit"]
+                                             ).ask()
             if next_choice == "All":
                 print("\nHere is a list of all your current habits:\n")
                 habits = list_of_habits(db)
@@ -163,52 +179,70 @@ def cli():
                 for habit in habits:
                     print(habit[0])
 
+            elif next_choice == "Exit":
+                continue
+
         elif choice == "Delete Habit":
             habits = [habit[0] for habit in list_of_habits(db)]
+
             if not habits:
                 print("\nYou have no habits logged to delete.\n")
                 continue
-            habit = questionary.select("Which habit would you like to delete?:", habits).ask()
-            delete_habit(db, habit)
-            print(f"\n{habit} has been deleted.\n")
+            else:
+                habits.append("Exit")
+                habit = questionary.select("Which habit would you like to delete?:", habits).ask()
+                if habit == "Exit":
+                    continue
+                else:
+                    delete_habit(db, habit)
+                    print(f"\n{habit} has been deleted.\n")
 
         elif choice == "Reset Habit":
             habits = [habit[0] for habit in list_of_habits(db)]
+
             if not habits:
                 print("\nYou have no habits logged to reset.\n")
                 continue
-            habit_name = questionary.select("Which habit would you like to reset?:", habits).ask()
-            habit = Habit(habit_name)
-            start_date = search_start_date(db, habit_name)
-            change_start_date = questionary.select(f"Would you like to change your start date? " 
-                                                   f"Current start date is: {start_date}",
-                                                   choices=["Change to today.", "Stay the same.",
-                                                            "Choose a day in the future."]).ask()
+            else:
+                habits.append("Exit")
+                print("\nPlease note that resetting a habit will delete all check-off events already logged "
+                      "and provide a new start date for your habit.\n")
+                habit_name = questionary.select("Which habit would you like to reset?:", habits).ask()
+                if habit_name == "Exit":
+                    continue
+                else:
+                    habit = Habit(habit_name)
+                    start_date = search_start_date(db, habit_name)
+                    change_start_date = questionary.select(f"Would you like to change your start date? " 
+                                                           f"Current start date is: {start_date}",
+                                                           choices=["Change to today.", "Stay the same.",
+                                                                    "Choose a day in the future."]).ask()
 
-            if change_start_date == "Change to today.":
-                start_date = date.today()
-                start_date = datetime.strftime(start_date, "%Y-%m-%d")
-                reset_habit(db, habit_name, start_date)
-                print("\nThe start date has been changed to today.\n")
+                    if change_start_date == "Change to today.":
+                        start_date = date.today()
+                        start_date = datetime.strftime(start_date, "%Y-%m-%d")
+                        reset_habit(db, habit_name, start_date)
+                        print("\nThe start date has been changed to today.\n")
 
-            elif change_start_date == "Stay the same.":
-                print(f"\nYour start date is still: {start_date}\n")
-                # No change is needed.
+                    elif change_start_date == "Stay the same.":
+                        print(f"\nYour start date is still: {start_date}\n")
+                        # No change is needed.
 
-            elif change_start_date == "Choose a day in the future.":
-                start_date = questionary.text("Enter the date you would like to restart your habit in the "
-                                              "format YYYY-MM-DD:").ask()
-                check_date(start_date)  # Check if the date is in the future
-                reset_habit(db, habit_name, start_date)
+                    elif change_start_date == "Choose a day in the future.":
+                        start_date = questionary.text("Enter the date you would like to restart your habit in the "
+                                                      "format YYYY-MM-DD:").ask()
+                        check_date(start_date)  # Check if the date is in the future
+                        reset_habit(db, habit_name, start_date)
 
-            print(f"\n{habit.name} has been reset.\n")
+                    print(f"\n{habit.name} has been reset.\n")
 
         elif choice == "Analyze Habit":
             analysis_choice = questionary.select("What would you like to analyze?",
                                                  choices=["Longest Streak of All Habits",
                                                           "Check-off Events for a Specific Month",
                                                           "Current Streak for a Habit",
-                                                          "Longest Streak for a Habit"]).ask()
+                                                          "Longest Streak for a Habit",
+                                                          "Exit"]).ask()
 
             if analysis_choice == "Longest Streak of All Habits":
                 max_longest_streak(db)
@@ -235,20 +269,27 @@ def cli():
                 if not habits:
                     print("\nYou have no habits to analyze.\n")
                     continue
-                habit_name = questionary.select("For which habit would you like to know your current streak?",
-                                                habits).ask()
-                current_streak = get_current_streak(db, habit_name)
-                print(f"\n{habit_name} has a longest streak of {current_streak}.\n")
+                else:
+                    habits.append("Exit")
+                    habit_name = questionary.select("For which habit would you like to know your current streak?",
+                                                    habits).ask()
+                    current_streak = get_current_streak(db, habit_name)
+                    print(f"\n{habit_name} has a current streak of {current_streak}.\n")
 
             if analysis_choice == "Longest Streak for a Habit":
                 habits = [habit[0] for habit in list_of_habits(db)]
                 if not habits:
                     print("\nYou have no habits to analyze.\n")
                     continue
-                habit_name = questionary.select("For which habit would you like to know your longest streak?",
-                                                habits).ask()
-                longest_streak = get_longest_streak(db, habit_name)
-                print(f"\n{habit_name} has a longest streak of {longest_streak}.\n")
+                else:
+                    habits.append("Exit")
+                    habit_name = questionary.select("For which habit would you like to know your longest streak?",
+                                                    habits).ask()
+                    longest_streak = get_longest_streak(db, habit_name)
+                    print(f"\n{habit_name} has a longest streak of {longest_streak}.\n")
+
+            if analysis_choice == "Exit":
+                continue
 
         elif choice == "Exit":
             break
@@ -256,27 +297,3 @@ def cli():
 
 if __name__ == "__main__":
     cli()
-
-
-
-    #
-    # elif choice == "Get Longest Streak":
-    #     name = text("Enter the name of the habit:").ask()
-    #     habit = Habit(name)
-    #     habit.get_longest_streak()
-    #     print(f"{habit.name} has a longest streak of {habit.longest_streak}.")
-    #
-    # elif choice == "Get Current Streak":
-    #     name = text("Enter the name of the habit:").ask()
-    #     habit = Habit(name)
-    #     habit.get_current_streak()
-    #     print(f"{habit.name} has a current streak of {habit.current_streak}.")
-    #
-
-    #
-    # elif choice == "Exit":
-    #     break
-
-
-# if __name__ == "__main__":
-#     main()

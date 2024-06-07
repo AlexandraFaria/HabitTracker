@@ -1,12 +1,7 @@
 """This module contains the Habit class and associated methods."""
 
-
-from datetime import datetime, timedelta, date
-from db import (get_db, add_habit, get_primary_key, add_habit_completion, search_habit, get_date_list,
-                reset_habit, delete_habit)
-from analyse import (calculate_longest_streak, calculate_current_streak, calculate_longest_streak_weekly,
-                     calculate_current_streak_weekly)
-from operator import attrgetter
+from datetime import datetime, date
+from db import get_db, add_habit, get_primary_key, add_habit_completion
 
 
 class Habit:
