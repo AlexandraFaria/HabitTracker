@@ -5,12 +5,12 @@ and analyze them to see how well you're doing.
 
 ## Table of Contents
 ***
--[Why is the Habit Tracker beneficial?](#Why-is-the-habit-tracker-beneficial)
--[What can the Habit Tracker do?](#What-can-the-habit-tracker-do?)
--[System Requirements](#System-Requirements)
--[Installation](#Installation)
--[How to use the Habit Tracker:](#How-to-use-the-habit-tracker)
--[How to use Test Data and Pytest](#How-to-use-Test-Data-and-Pytest)
+-\n[Why is the Habit Tracker beneficial?](#Why-is-the-habit-tracker-beneficial)
+-\n[What can the Habit Tracker do?](#What-can-the-habit-tracker-do)
+-\n[System Requirements](#System-Requirements)
+-\n[Installation](#Installation)
+-\n[How to use the Habit Tracker:](#How-to-use-the-habit-tracker)
+-\n[How to use Test Data and Pytest](#How-to-use-Test-Data-and-Pytest)
 
 ## Why is the Habit Tracker beneficial?
 ***
@@ -21,7 +21,8 @@ because it can help to implement positive lifestyle changes that are important t
 Psychologically, the user is motivated to continue their habits, so they don't BREAK 
 their longest streak.
 
-## What can the Habit Tracker do? 
+## What can the Habit Tracker do?
+***
 
 Functionality
 ***
@@ -154,6 +155,7 @@ The habit will then be deleted from the CLI and the database.
 ![img_14.png](img_14.png)
 
 **- Reset Habit**
+
 Resetting the habit allows the user to delete all previous check-off events and select a new start date for the habit.
 This is useful if the user has not been using the Habit Tracker for an extended period of time, but they are still 
 working on improving that habit. 
@@ -169,7 +171,8 @@ start date.
 
 ![img_17.png](img_17.png)
 
-- Exit
+**- Exit**
+
 The exit function in the Main Menu allows the user to close the Habit Tracker.
 
 ![img_19.png](img_19.png)
@@ -193,6 +196,7 @@ pytest.exe
 Note: The test data used is in the file conftest.py. The conftest.py includes all test fixtures including:
 
 -5 predefined habits (3 daily and 2 weekly)
+
 -4 weeks of check-off events for all 5 habits
 
 This file should be stored in the same folder as the test file:
