@@ -30,7 +30,7 @@ their longest streak.
 ## What can the Habit Tracker do?
 ***
 
-Functionality
+**Functionality**
 ***
 
 The Habit Tracker can log habits:
