@@ -9,6 +9,8 @@ and analyze them to see how well you're doing.
 [What can the Habit Tracker do?](#What-can-the-habit-tracker-do?)
 [System Requirements](#System-Requirements)
 [Installation](#Installation)
+[How to use the Habit Tracker:](#How-to-use-the-habit-tracker)
+[How to use Test Data and Pytest](#How-to-use-Test-Data-and-Pytest)
 
 ## Why is the Habit Tracker beneficial?
 ***
@@ -62,5 +64,81 @@ pip install questionary
 ``````commandline
 pip install pytest
 ``````
+
+
+## How to use the Habit Tracker:
+***
+
+1. Open the terminal of your preferred IDE (Integrated Development Environment) or command line. 
+(For reference I used Pycharm)
+
+2. Navigate to the directory where the Habit Tracker is located.
+
+3. Run the Habit Tracker by typing the following command in the terminal:
+
+``````commandline
+python main.py
+``````
+
+4. Use the Habit Tracker by selecting which option you would like to use from the main menu. 
+
+Note: You can select an option using the arrow keys on your keyboard and pressing enter to select the option
+you want to use.
+
+5. Follow the prompts to complete the action you have selected. 
+
+Main Menu:
+
+![img.png](img.png)
+
+
+- Create Habit
+- 
+- Delete Habit
+- Check Off Habit
+- Show List of Habits
+- Analyze Habit
+- Delete Habit
+- Reset Habit
+
+
+## How to use Test Data and Pytest
+
+1. Open the terminal of your preferred IDE (Integrated Development Environment) or command line.
+2. Navigate to the directory where the Habit Tracker is located.
+3. Make sure the habit.py file has the database set to--> **Database = "test.db"**
+3. Run pytest by typing the following command in the terminal:
+
+``````commandline   
+pytest.exe
+``````
+
+Note: The test data used is in the file conftest.py. The conftest.py includes all test fixtures including:
+
+-5 predefined habits (3 daily and 2 weekly)
+-4 weeks of check-off events for all 5 habits
+
+This file should be stored in the same folder as the test file:
+test_habit.py.
+
+4. Currently, after running Pytest all tests should pass. However, the last two methods are skipped which delete the
+data in the database (the teardown method for some reason does not delete the test.db file from the directory). 
+
+Note: These two methods are skipped to allow the user to interact with the data from the test.db file while running the
+main.py file.  This will allow the user to test the functionality of the Habit Tracker.
+
+5. If you would like to run pytest again, I would recommend manually deleting the test.db file. 
+
+To delete the test.db file manually, type the following command in the terminal:
+
+``````commandline   
+del .\test.db
+``````
+6. Then comment out the two fixture notes @pytest.mark.skip in the test_habit.py file. This allows the last two methods
+to run and delete all the data in the test.db file, instead of skipping these last two methods.
+
+
+
+
 
 
