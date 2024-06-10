@@ -5,12 +5,12 @@ and analyze them to see how well you're doing.
 
 ## Table of Contents
 ***
-[Why is the Habit Tracker beneficial?](#Why-is-the-habit-tracker-beneficial)
-[What can the Habit Tracker do?](#What-can-the-habit-tracker-do?)
-[System Requirements](#System-Requirements)
-[Installation](#Installation)
-[How to use the Habit Tracker:](#How-to-use-the-habit-tracker)
-[How to use Test Data and Pytest](#How-to-use-Test-Data-and-Pytest)
+-[Why is the Habit Tracker beneficial?](#Why-is-the-habit-tracker-beneficial)
+-[What can the Habit Tracker do?](#What-can-the-habit-tracker-do?)
+-[System Requirements](#System-Requirements)
+-[Installation](#Installation)
+-[How to use the Habit Tracker:](#How-to-use-the-habit-tracker)
+-[How to use Test Data and Pytest](#How-to-use-Test-Data-and-Pytest)
 
 ## Why is the Habit Tracker beneficial?
 ***
