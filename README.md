@@ -87,18 +87,96 @@ you want to use.
 
 5. Follow the prompts to complete the action you have selected. 
 
-Main Menu:
+**-Main Menu:**
 
 ![img.png](img.png)
 
-- Create Habit
-- 
-- Delete Habit
-- Check Off Habit
-- Show List of Habits
-- Analyze Habit
-- Delete Habit
-- Reset Habit
+**- Create Habit**
+
+![img_1.png](img_1.png)
+
+**- Check Off Habit**
+
+![img_2.png](img_2.png)
+
+Note: For habit consistency the check-off event is only available for the current date. This does not allow the user
+to go back in time and complete a check-off event for a previous date. (This is only allowed with the test data.)
+
+**- Show List of Habits**
+
+![img_3.png](img_3.png)
+
+All:
+
+![img_5.png](img_5.png)
+
+Daily:
+
+![img_6.png](img_6.png)
+
+
+Weekly:
+
+![img_7.png](img_7.png)
+
+
+**- Analyze Habit**
+
+Longest Streak of All Habits:
+
+![img_8.png](img_8.png)
+
+Check-off Events for a Specific Month:
+
+Enter a value from 1-12 that corresponds to the month you would like to analyze.
+
+![img_11.png](img_11.png)
+
+Note: This function allows the user to see the total number of check-off events for each individual habit being tracked
+for a specific month. (If the habit was not tracked at the time, the total will be 0 for that habit.) 
+
+The habits are in ascending order, so the user can see which habit they struggled with the most for any given month.
+
+Current Streak for a Habit: 
+
+![img_12.png](img_12.png)
+
+Longest streak for a Habit:
+
+![img_13.png](img_13.png)
+
+**- Delete Habit**
+Select the habit you would like to delete from the list: 
+![img_15.png](img_15.png)
+
+The habit will then be deleted from the CLI and the database.
+
+![img_14.png](img_14.png)
+
+**- Reset Habit**
+Resetting the habit allows the user to delete all previous check-off events and select a new start date for the habit.
+This is useful if the user has not been using the Habit Tracker for an extended period of time, but they are still 
+working on improving that habit. 
+
+They may want to reset all the data to get a more accurate representation of their progress.
+
+There are 3 options for resetting the habit: 
+
+![img_16.png](img_16.png)
+
+Note: The user is notified of the current start date for reference to inform their decision of how to modify their
+start date.
+
+![img_17.png](img_17.png)
+
+- Exit
+The exit function in the Main Menu allows the user to close the Habit Tracker.
+
+![img_19.png](img_19.png)
+
+Otherwise, the option to Exit throughout the Habit Tracker in all other menus will return the user to the main menu.
+
+![img_18.png](img_18.png)
 
 
 ## How to use Test Data and Pytest
