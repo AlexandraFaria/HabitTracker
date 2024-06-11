@@ -151,8 +151,8 @@ def get_current_streak(db, name):
         return f"{current_streak} weeks"
 
 
-# Need to improve data redundancy in the following functions. The code is repetitive and can be improved.
-
+# Need to improve data redundancy in the following functions. Also-- Need to add feature that only includes dates from
+# less than 1 year ago. (So then days from May 2024 are not counted with May 2025.)
 def monthly_habit_completion(db, month):
     """Get the number of completions for each habit in the last month, in ascending order.
 
