@@ -93,7 +93,7 @@ python main.py
 
 5. Use the Habit Tracker by selecting which option you would like to use from the main menu. 
 
-Note: You can select an option using the arrow keys on your keyboard and pressing enter to select the option
+**Note:** You can select an option using the arrow keys on your keyboard and pressing enter to select the option
 you want to use.
 
 6. Follow the prompts to complete the action you have selected. 
@@ -110,7 +110,7 @@ you want to use.
 
 ![img_2.png](Images/img_2.png)
 
-Note: For habit consistency the check-off event is only available for the current date. This does not allow the user
+**Note:** For habit consistency the check-off event is only available for the current date. This does not allow the user
 to go back in time and complete a check-off event for a previous date. (This is only allowed with the test data.)
 
 **- Show List of Habits**
@@ -143,7 +143,7 @@ Enter a value from 1-12 that corresponds to the month you would like to analyze.
 
 ![img_11.png](Images/img_11.png)
 
-Note: This function allows the user to see the total number of check-off events for each individual habit being tracked
+**Note:** This function allows the user to see the total number of check-off events for each individual habit being tracked
 for a specific month. (If the habit was not tracked at the time, the total will be 0 for that habit.) 
 
 The habits are in ascending order, so the user can see which habit they struggled with the most for any given month.
@@ -157,7 +157,9 @@ Longest streak for a Habit:
 ![img_13.png](Images/img_13.png)
 
 **- Delete Habit**
+
 Select the habit you would like to delete from the list: 
+
 ![img_15.png](Images/img_15.png)
 
 The habit will then be deleted from the CLI and the database.
@@ -176,7 +178,7 @@ There are 3 options for resetting the habit:
 
 ![img_16.png](Images/img_16.png)
 
-Note: The user is notified of the current start date for reference to inform their decision of how to modify their
+**Note:** The user is notified of the current start date for reference to inform their decision of how to modify their
 start date.
 
 ![img_17.png](Images/img_17.png)
@@ -203,11 +205,11 @@ Otherwise, the option to Exit throughout the Habit Tracker in all other menus wi
 pytest.exe
 ``````
 
-Note: The test data used is in the file conftest.py. The conftest.py includes all test fixtures including:
+**Note:** The test data used is in the file conftest.py. The conftest.py includes all test fixtures including:
 
--5 predefined habits (3 daily and 2 weekly)
+    -5 predefined habits (3 daily and 2 weekly)
 
--4 weeks of check-off events for all 5 habits
+    -4 weeks of check-off events for all 5 habits
 
 This file should be stored in the same folder as the test file:
 test_habit.py.
