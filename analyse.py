@@ -5,7 +5,24 @@ from db import (get_primary_key, get_date_list, list_of_habits_daily, list_of_ha
 
 
 def calculate_longest_streak(db, name):
-    """Calculate the longest streak by comparing current streak to the longest streak."""
+    """Calculate the longest streak for daily habits.
+
+    dates = a list of check off dates for the habit searched via the habit_id (primary key)
+
+    If there are no dates for the habit, the function returns 0. If there are dates, the function proceeds to the
+    calculation.
+
+    The longest streak is calculated by looping through the list of dates and counting the number of consecutive days.
+    This value is sent to the current_reviewed_streak variable. Once the streak breaks, the current_reviewed_streak is
+    sent to the longest_streak variable. Then the count continues with the current_reviewed_streak reset to 1. This
+    cycle continues until the end of the list of dates.
+
+    parameters:
+        db: Database connection from get_db() function
+        name(str): Name of the habit used to search habit_id
+
+    returns:
+        int: The longest streak of the habit."""
 
     habit_id = get_primary_key(db, name)
     dates = get_date_list(db, habit_id)
@@ -30,7 +47,23 @@ def calculate_longest_streak(db, name):
 
 
 def calculate_longest_streak_weekly(db, name, start_date):
-    """Calculate the longest streak by comparing current streak to the longest streak."""
+    """Calculate the longest streak for weekly habits.
+
+    dates = a list of check off dates for the habit searched via the habit_id (primary key)
+
+    If there are no dates for the habit, the function returns 0. If there are dates, the function proceeds to the
+    calculation.
+
+    The list of dates is then filtered to only include the dates that match the day of the week the habit was started.
+    Again, if this list is empty, the function returns 0. Otherwise, the calculation proceeds to find the longest
+    streak by counting the longest streak of consecutive weeks with a check-off on the required day of the week.
+
+    parameters:
+        db: Database connection from get_db() function
+        name(str): Name of the habit used to search habit_id
+
+    returns:
+        int: The longest streak of the habit."""
 
     habit_id = get_primary_key(db, name)
     dates = get_date_list(db, habit_id)
@@ -61,7 +94,21 @@ def calculate_longest_streak_weekly(db, name, start_date):
 
 
 def get_longest_streak(db, name):
-    """Get the longest streak of the habit."""
+    """Get the longest streak of given habit regardless of frequency.
+
+    daily_list = a list of daily habits filtered from the database by frequency
+    weekly_list = a list of weekly habits filtered from the database by frequency
+
+    Uses the functions calculate_longest_streak (daily) and calculate_longest_streak_weekly (weekly)
+
+    parameters:
+        db: Database connection from get_db() function
+        name(str): Name of the habit used to search habit_id
+
+    returns:
+        str: The longest streak of the habit with designated unit (days or weeks)
+    """
+
     # Check the frequency of the habit
     daily_list = [habit[0] for habit in list_of_habits_daily(db)]
     weekly_list = [habit[0] for habit in list_of_habits_weekly(db)]
@@ -77,8 +124,23 @@ def get_longest_streak(db, name):
 
 
 def calculate_current_streak(db, name):
-    """Calculate the current streak of the habit, if there is a completion date with today's date."""
+    """Calculate the current streak of daily habits.
 
+    dates = a list of check off dates for the habit searched via the habit_id (primary key)
+
+    If there are no dates for the habit, the function returns 0. If there are dates, the function proceeds to the
+    calculation.
+
+    The current streak is only calculated if the date at index [0] is today's date. Then, it is calculated by looping
+    through the list of dates and counting the number of consecutive days until the streak breaks.
+
+    parameters:
+        db: Database connection from get_db() function
+        name(str): Name of the habit used to search habit_id
+
+    returns:
+        int: The current streak of the habit.
+    """
 
     today = date.today()
 
@@ -107,7 +169,27 @@ def calculate_current_streak(db, name):
 
 
 def calculate_current_streak_weekly(db, name, start_date):
-    """Calculate the longest streak by comparing current streak to the longest streak."""
+    """Calculate the current streak of weekly habits.
+
+    dates = a list of check off dates for the habit searched via the habit_id (primary key)
+
+    If there are no dates for the habit, the function returns 0. If there are dates, the function proceeds to the
+    calculation.
+
+    filtered_list = a list of dates that match the day of the week the habit was started
+
+    If the filtered_list is empty, the function returns 0. Otherwise, the calculation proceeds.
+
+    The current streak is only calculated if the date at index [0] is within the last week. Then, it is calculated by
+    counting the number of consecutive weeks when the habit was completed on the required day of the week.
+
+    parameters:
+        db: Database connection from get_db() function
+        name(str): Name of the habit used to search habit_id
+
+    returns:
+        int: The current streak of the habit.
+    """
 
     habit_id = get_primary_key(db, name)
     today = date.today()
@@ -139,7 +221,21 @@ def calculate_current_streak_weekly(db, name, start_date):
 
 
 def get_current_streak(db, name):
-    """Get the current streak of the habit."""
+    """Get the current streak of given habit regardless of frequency.
+
+    daily_list = a list of daily habits filtered from the database by frequency
+    weekly_list = a list of weekly habits filtered from the database by frequency
+
+    Uses the functions calculate_current_streak (daily) and calculate_current_streak_weekly (weekly)
+
+    parameters:
+        db: Database connection from get_db() function
+        name(str): Name of the habit used to search habit_id
+
+    returns:
+        str: The current streak of the habit with designated unit (days or weeks)
+    """
+
     daily_list = [habit[0] for habit in list_of_habits_daily(db)]
     weekly_list = [habit[0] for habit in list_of_habits_weekly(db)]
 
@@ -153,16 +249,27 @@ def get_current_streak(db, name):
         return f"{current_streak} weeks"
 
 
-# Need to improve data redundancy in the following functions. Also-- Need to add feature that only includes dates from
-# less than 1 year ago. (So then days from May 2024 are not counted with May 2025.)
+# Need to improve data redundancy in the following two functions monthly_habit_completion and max_longest_streak
 def monthly_habit_completion(db, month):
-    """Get the number of completions for each habit in the last month, in ascending order.
+    """Get the number of completions for each habit for the provided month, in ascending order.
+
+    daily_list = a list of daily habits filtered from the database by frequency
+    weekly_list = a list of weekly habits filtered from the database by frequency
+
+    The function loops through the list of daily habits and weekly habits and filters the dates to only include the
+    dates that match the designated month and are within the most recent year.
+
+    The function then counts the number of check-off events for each habit and stores the count in a dictionary with the
+    habit name as the key and the count as the value. The dictionary is then sorted in ascending order by the number of
+    check off events.
 
     parameters:
         db: Database connection.
        month(int): Numerical value of month for date retrieval.
+
     returns:
-       list: Number of check-off events for each habit in the last month separated by frequency.
+       list of key:value pairs: Name of habit with number of check-off events in the designated month separated by
+                                periodicity.
     """
     print("Daily Habits:\n")
     daily_list = [habit[0] for habit in list_of_habits_daily(db)]
@@ -204,7 +311,25 @@ def monthly_habit_completion(db, month):
 
 
 def max_longest_streak(db):
-    """Get the habit with the longest streak for daily and weekly habits."""
+    """Analyzes the longest streak of all habits in the database and returns the daily and weekly habit with the longest
+    streak.
+
+    daily_list = a list of daily habits filtered from the database by frequency
+    weekly_list = a list of weekly habits filtered from the database by frequency
+
+    The function loops through the list of daily habits and weekly habits and calculates the longest streak for each
+    storing these values in a dictionary with the habit name as the key and the longest streak as the value.
+
+    The function then finds the maximum value of the dictionary and prints the habit with the longest streak with its
+    corresponding unit (days or weeks).
+
+    parameters:
+        db: Database connection.
+
+    returns:
+        str: Daily and weekly habit with the longest streak and the number of days or weeks.
+
+    """
 
     print("\nDaily Habits:\n")
     daily_list = [habit[0] for habit in list_of_habits_daily(db)]
@@ -234,4 +359,3 @@ def max_longest_streak(db):
         maximum_weekly_streak = max(weekly_habit_longest_streak, key=weekly_habit_longest_streak.get)
         print(f"Weekly Habit with Longest Streak: {maximum_weekly_streak} with "
               f"{weekly_habit_longest_streak[maximum_weekly_streak]} weeks.\n")
-
