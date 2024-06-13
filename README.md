@@ -84,8 +84,8 @@ pip install pytest
 3. Decide whether you would like to use the test data or not. (If you would like to use the test data please proceed to 
 [How to use Test Data and Pytest](#How-to-use-Test-Data-and-Pytest) section.) Otherwise proceed to the next step.
 
-4. Set database to "main.db" by follwoing the steps below:
-   - Open the habit.py file and change the database to "main.db" by changing the following line:
+4. Set database to "main.db" by following the steps below:
+   - Open the habit.py file and change the database to "main.db" by changing the code in line **10** to the following:
      - **Database = "main.db"**
    - Open the main.py file and change the database to "main.db" by changing the code in line **115** to the following:
      - **db = get_db("main.db")**
