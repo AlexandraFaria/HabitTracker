@@ -82,27 +82,26 @@ pip install pytest
 2. Navigate to the directory where the Habit Tracker is located.
 
 3. Decide whether you would like to use the test data or not. (If you would like to use the test data please proceed to 
-[How to use Test Data and Pytest](#How-to-use-Test-Data-and-Pytest) section.)
+[How to use Test Data and Pytest](#How-to-use-Test-Data-and-Pytest) section.) Otherwise proceed to the next step.
 
-5. Make sure the habit.py file has the database set to-->**Database = "main.db"** and the **db = get_db("main.db")** 
-in the main.py file database is set to **db = get_db("main.db")** in the CLI function line **115**. 
-
-(Or alternatively you can use the "test.db" after running pytest, if you have skipped the test functions in Pytest 
-which delete the data.)
-
-
-4. Run the Habit Tracker by typing the following command in the terminal:
+4. Set database to "main.db" by follwoing the steps below:
+   - Open the habit.py file and change the database to "main.db" by changing the following line:
+     - **Database = "main.db"**
+   - Open the main.py file and change the database to "main.db" by changing the code in line **115** to the following:
+     - **db = get_db("main.db")**
+     - 
+5. Run the Habit Tracker by typing the following command in the terminal:
 
 ``````commandline
 python main.py
 ``````
 
-5. Use the Habit Tracker by selecting which option you would like to use from the main menu. 
+6. Use the Habit Tracker by selecting which option you would like to use from the main menu. 
 
 **Note:** You can select an option using the arrow keys on your keyboard and pressing enter to select the option
 you want to use.
 
-6. Follow the prompts to complete the action you have selected. 
+7. Follow the prompts to complete the action you have selected. 
 
 **-Main Menu:**
 
