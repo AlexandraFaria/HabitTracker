@@ -58,7 +58,7 @@ class Habit:
        Check if the date is in the correct format and not in the future.
        This is more so for the test data, because the CLI will only allow a completion date of today's date.
 
-       argument:
+       parameter:
            completion_date(str): Date the habit was completed.
 
 
@@ -83,7 +83,7 @@ class Habit:
         """Check the input of a month to make sure it is an integer and between 1-12, this is more for
         testing in pytest than for the CLI
 
-        argument:
+        :parameter:
            month(int): Month to check.
         returns:
               int: Month if it is between 1-12.
@@ -106,7 +106,7 @@ class Habit:
         (This functionality is more so for testing purposes,
         as in the CLI, the only option for a check-off date is today's date.)
 
-        argument:
+        parameter:
            completion_date(str): Date the habit was completed. Default is today, if not provided.
         """
         if completion_date is None:

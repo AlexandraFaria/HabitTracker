@@ -20,7 +20,7 @@ def get_db(name="main.db"):
 def create_tables(db):
     """Create the tables in the database if they do not exist.
 
-    argument:
+    :parameter:
        db: Database connection from the get_db function.
     """
 

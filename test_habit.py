@@ -168,6 +168,11 @@ def test_monthly_habit_completion(db, capsys):
 @pytest.mark.skip(reason="Comment out if you would like to run Pytest more than once to delete ALL data after running.")
 # This test is skipped so the user can use the test.db file to run the main.py CLI program to see full functionality.
 def test_habit_deletion(db, habit1, habit2, habit3, habit4, habit5):
+    """Test the deletion of habits from the database.
+
+    parameters:
+        fixtures that are defined in the conftest.py file
+    """
     list_of_habits = [habit1, habit2, habit3, habit4, habit5]
     for habit in list_of_habits:
         delete_habit(db, habit.name)
@@ -180,6 +185,7 @@ def test_habit_deletion(db, habit1, habit2, habit3, habit4, habit5):
 @pytest.mark.skip(reason="Comment out if you would like to run Pytest more than once to delete ALL data after running.")
 # This test is skipped so the user can use the test.db file to run the main.py CLI program to see full functionality.
 def teardown_method():
+    """Delete the test.db file after the tests are run."""
     os.remove("test.db")
 
 # teardown_method is not working properly, the test.db is still in the directory after the test is run,
