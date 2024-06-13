@@ -89,7 +89,7 @@ pip install pytest
      - **Database = "main.db"**
    - Open the main.py file and change the database to "main.db" by changing the code in line **115** to the following:
      - **db = get_db("main.db")**
-     - 
+
 5. Run the Habit Tracker by typing the following command in the terminal:
 
 ``````commandline
