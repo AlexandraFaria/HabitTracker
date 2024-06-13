@@ -213,9 +213,9 @@ pytest.exe
 
 **Note:** The test data used is in the file conftest.py. The conftest.py includes all test fixtures including:
 
-**-5 predefined habits (3 daily and 2 weekly)
+**-5 predefined habits (3 daily and 2 weekly)**
 
--4 weeks of check-off events for all 5 habits**
+**-4 weeks of check-off events for all 5 habits**
 
 
 
