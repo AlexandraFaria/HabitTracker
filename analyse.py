@@ -1,10 +1,7 @@
-# sort out repeated code for finding the filtered data for the weekly current and longest streak
-# work on getting down the duplicate code--- make into another function!
+"""This module contains functions to analyze the data in the database."""
 
-
-from db import (get_primary_key, get_date_list, get_db, list_of_habits_daily, list_of_habits_weekly, search_habit,
-                search_start_date)
 from datetime import timedelta, date, datetime
+from db import (get_primary_key, get_date_list, list_of_habits_daily, list_of_habits_weekly, search_start_date)
 
 
 def calculate_longest_streak(db, name):
@@ -122,18 +119,21 @@ def calculate_current_streak_weekly(db, name, start_date):
         day_of_week = start_date.weekday()
         filtered_list = list(filter(lambda x: (x.weekday() == day_of_week), dates))
 
-        current_streak = 1
-
-        if filtered_list[0] >= today - timedelta(weeks=1):
-            for i in (range(1, len(filtered_list))):
-                if filtered_list[i] == filtered_list[i - 1] - timedelta(weeks=1):
-                    current_streak += 1
-                else:
-                    break
+        if not filtered_list:
+            return 0
         else:
-            current_streak = 0
+            current_streak = 1
 
-        return current_streak
+            if filtered_list[0] >= today - timedelta(weeks=1):
+                for i in (range(1, len(filtered_list))):
+                    if filtered_list[i] == filtered_list[i - 1] - timedelta(weeks=1):
+                        current_streak += 1
+                    else:
+                        break
+            else:
+                current_streak = 0
+
+            return current_streak
 
 
 def get_current_streak(db, name):
@@ -169,11 +169,13 @@ def monthly_habit_completion(db, month):
         print("\nYou have no habits logged to analyze.\n")
     else:
         daily_habit_total = {}
+        cutoff_date = date.today() - timedelta(days=365)
 
         for habit in daily_list:
             habit_id = get_primary_key(db, habit)
             dates = get_date_list(db, habit_id)
-            month_check_offs = [check_off for check_off in dates if check_off.month == month]
+            month_check_offs = [check_off for check_off in dates if check_off.month == month and
+                                check_off > cutoff_date]
             daily_habit_total[habit] = len(month_check_offs)
         sort_daily_habit_total = dict(sorted(daily_habit_total.items(), key=lambda x: x[1]))
         for key, value in sort_daily_habit_total.items():
@@ -186,11 +188,13 @@ def monthly_habit_completion(db, month):
         print("\nYou have no habits logged to analyze.\n")
     else:
         weekly_habit_total = {}
+        cutoff_date = date.today() - timedelta(days=365)
 
         for habit in weekly_list:
             habit_id = get_primary_key(db, habit)
             dates = get_date_list(db, habit_id)
-            month_check_offs = [check_off for check_off in dates if check_off.month == month]
+            month_check_offs = [check_off for check_off in dates if check_off.month == month and
+                                check_off > cutoff_date]
             weekly_habit_total[habit] = len(month_check_offs)
         sort_weekly_habit_total = dict(sorted(weekly_habit_total.items(), key=lambda x: x[1]))
         for key, value in sort_weekly_habit_total.items():

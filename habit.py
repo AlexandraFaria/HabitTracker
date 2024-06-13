@@ -16,13 +16,11 @@ class Habit:
 
         parameters:
            name (str): Name of the habit.
-           description(str): Description of the habit.
-           frequency(str): Periodicity habit should be done.
+           description(str): Description of the habit/ purpose for habit creation.
+           frequency(str): Periodicity habit should be done. (Daily or Weekly)
            start_date(date): Date the habit was started.
-           database(str): Name of the database to connect to. Default is main.db.
+           database(str): Name of the database to connect to. (main.db or test.db)
            self.habit_id(int): Primary key of the habit.
-           self.current_streak(int): Current streak of the habit, including today's date.
-           self.longest_streak(int): Longest streak of the habit.
         """
         self.name = (name.lower()).capitalize()
         # Capitalize the first letter of the habit name. (For consistency with test database.)
@@ -31,38 +29,25 @@ class Habit:
         self.start_date = start_date
         self.habit_id = None
         self.db = get_db(self.Database)
-        # self.current_streak = 0
-        # self.longest_streak = 0
-        # self.habits.append(self) if self not in self.habits else None
-        # These attributes are not needed, because I can bypass and just use the db.py and analyse.py
 
     def __str__(self):
         """
         Description of attributes and values of the habit.
 
-
         Returns:
            str: Description of the habit.
         """
-        return (f"""Habit: {self.name} \nDescription: {self.description} \nFrequency: {self.frequency}"""
+        return (f"""Habit: {self.name} \nPurpose: {self.description} \nFrequency: {self.frequency}"""
                 f"""\nStart Date: {self.start_date}""")
 
     def save_habit(self):
         """
        Save the habit to the database.
-
-
-       Method first searches database to see if the habit already exists.
-       If habit exists, it will print a message saying the habit already exists.
-       If habit does not exist, it will be added to the database.
-
-
+       In the CLI, prior to the habit being saved, multiple checks are completed to ensure
+        the habit does not already exist in the database and is in a consistent format.
         """
-        # result = search_habit(self.db, self.name)
-        # if result == self.name:
-        #     print(f"{self.name} already exists.")
-        #
-        # else:
+        # Design choice to remove the check for existing habits in the database to the main.py file.
+
         add_habit(self.db, self.name, self.description, self.frequency, self.start_date)
         self.habit_id = get_primary_key(self.db, self.name)
         return self.habit_id
@@ -96,7 +81,14 @@ class Habit:
     @staticmethod
     def check_month(month):
         """Check the input of a month to make sure it is an integer and between 1-12, this is more for
-        testing in pytest than for the CLI"""
+        testing in pytest than for the CLI
+
+        argument:
+           month(int): Month to check.
+        returns:
+              int: Month if it is between 1-12.
+              error message: If the month is not between 1-12.
+          """
         month = int(month)
         if 1 <= month <= 12:
             return month
@@ -107,11 +99,12 @@ class Habit:
         """
         Add a completion date to the habit.
 
-
         If no completion date is added, the default is the current date and time.
         If a date is added by the user, the date is checked by the check_date_input_past method to make sure
         the date is in the correct format and not in the future.
 
+        (This functionality is more so for testing purposes,
+        as in the CLI, the only option for a check-off date is today's date.)
 
         argument:
            completion_date(str): Date the habit was completed. Default is today, if not provided.
@@ -125,15 +118,8 @@ class Habit:
             add_habit_completion(self.db, self.habit_id, completion_date)
 
 
-
-# This function is not needed in the habit class, because I can bypass and just use the db.py
-    # def delete_habit(self):
-    #     """Delete the habit from the database completely and remove from the habits list."""
-    #     self.habit_id = get_primary_key(self.db, self.name)
-    #     delete_habit(self.db, self.habit_id)
-    #     # self.habits.remove(self)
-    #     # return self.habits
-
+# Code for previous design choice using class variables and class methods.
+# Chose to switch to use of lists and dictionaries instead of instance variables for runtime storage.
 
 # This function is not needed in the habit class, because I can bypass and just use the db.py and analyse.py
     # habits = []

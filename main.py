@@ -1,11 +1,12 @@
-from habit import Habit
-import questionary
+"""This module includes the functions associated with checking user input and the main command line interface. """
+
 from datetime import datetime, date
 import calendar
+import questionary
+from habit import Habit
 from db import (get_db, list_of_habits, list_of_habits_weekly, list_of_habits_daily, search_start_date, reset_habit,
                 search_habit, delete_habit)
 from analyse import get_longest_streak, get_current_streak, monthly_habit_completion, max_longest_streak
-# How should you order your imports?
 
 
 def check_date(start_date):
@@ -14,7 +15,7 @@ def check_date(start_date):
             if len(start_date) == 10:
                 start_date = datetime.strptime(start_date, "%Y-%m-%d").date()
                 if start_date > date.today():
-                    break
+                    return start_date
                 if start_date < date.today():
                     print("The date you entered is in the past. Please try again.")
                     raise ValueError("The date you entered is in the past.")
@@ -96,7 +97,7 @@ def cli():
             elif start_date == "A day in the Future":
                 start_date = questionary.text("Enter the date you would like to start your "
                                               "habit in the format YYYY-MM-DD:").ask()
-                check_date(start_date)  # Check if the date is in the future
+                start_date = check_date(start_date)  # Check if the date is in the future
 
             elif start_date == "Exit":
                 print(f"Your habit {name} was not created.")
