@@ -211,7 +211,9 @@ Otherwise, the option to Exit throughout the Habit Tracker in all other menus wi
 pytest.exe
 ``````
 
-**Note:** The test data used is in the file conftest.py. The conftest.py includes all test fixtures including:
+**Note:** 
+
+The conftest.py includes all test fixtures including:
 
 **-5 predefined habits (3 daily and 2 weekly)**
 
