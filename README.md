@@ -222,8 +222,8 @@ The conftest.py includes all test fixtures including:
 
 
 5. After running pytest, the test.db file will be created with the test data. The last two functions in test_habit.py
-are currently being skipped, so that the user is able to interact with the data from the test.db file while running the
-main.py file. 
+    are currently being skipped, so that the user is able to interact with the data from the test.db file while running 
+    the main.py file. 
 
 If you would like to interact with the test data, you need to proceed to the main.py file and change the database to the
 test database by changing the following lines in the main.py file:
