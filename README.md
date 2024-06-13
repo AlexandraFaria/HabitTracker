@@ -48,8 +48,8 @@ The Habit Tracker can analyze habits:
 
   - Calculate Current Streak per habit
   - Calculate Longest Streak per habit
-  - Total of check-off events in a month per habit
-  - Habit with the longest streak
+  - Total check-off events per habit in a selected month
+  - Calculate the habit with the longest streak of all habits in the specified frequency (daily or weekly)
 
 
 ## System Requirements
@@ -81,7 +81,10 @@ pip install pytest
 
 2. Navigate to the directory where the Habit Tracker is located.
 
-3. Make sure the habit.py file has the database set to-->**Database = "main.db"** and the **db = get_db("main.db")** 
+3. Decide whether you would like to use the test data or not. (If you would like to use the test data please proceed to 
+(#How-to-use-Test-Data-and-Pytest) section.)
+
+5. Make sure the habit.py file has the database set to-->**Database = "main.db"** and the **db = get_db("main.db")** 
 in the main.py file database is set to **db = get_db("main.db")** in the CLI function line **115**. 
 
 (Or alternatively you can use the "test.db" after running pytest, if you have skipped the test functions in Pytest 
