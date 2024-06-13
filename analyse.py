@@ -43,18 +43,21 @@ def calculate_longest_streak_weekly(db, name, start_date):
 
         filtered_list = list(filter(lambda x: (x.weekday() == day_of_week), dates))
 
-        current_reviewed_streak = 1
-        longest_streak = 1
+        if not filtered_list:
+            return 0
+        else:
+            current_reviewed_streak = 1
+            longest_streak = 1
 
-        for i in (range(1, len(filtered_list))):
-            if filtered_list[i] == filtered_list[i - 1] - timedelta(weeks=1):
-                current_reviewed_streak += 1
-                longest_streak = max(longest_streak, current_reviewed_streak)
-            else:
-                current_reviewed_streak = 1
+            for i in (range(1, len(filtered_list))):
+                if filtered_list[i] == filtered_list[i - 1] - timedelta(weeks=1):
+                    current_reviewed_streak += 1
+                    longest_streak = max(longest_streak, current_reviewed_streak)
+                else:
+                    current_reviewed_streak = 1
 
-        longest_streak = max(longest_streak, current_reviewed_streak)
-        return longest_streak
+            longest_streak = max(longest_streak, current_reviewed_streak)
+            return longest_streak
 
 
 def get_longest_streak(db, name):
@@ -76,7 +79,6 @@ def get_longest_streak(db, name):
 def calculate_current_streak(db, name):
     """Calculate the current streak of the habit, if there is a completion date with today's date."""
 
-    habit_id = get_primary_key(db, name)
 
     today = date.today()
 
