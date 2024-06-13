@@ -82,7 +82,7 @@ pip install pytest
 2. Navigate to the directory where the Habit Tracker is located.
 
 3. Make sure the habit.py file has the database set to-->**Database = "main.db"** and the **db = get_db("main.db")** 
-in the main.py file database is set to **db = get_db("main.db")** in the CLI function line 71. 
+in the main.py file database is set to **db = get_db("main.db")** in the CLI function line **115**. 
 
 (Or alternatively you can use the "test.db" after running pytest, if you have skipped the test functions in Pytest 
 which delete the data.)

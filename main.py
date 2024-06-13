@@ -1,4 +1,8 @@
-"""This module includes the functions associated with checking user input and the main command line interface. """
+"""This module includes the functions associated with checking user input and the main command line interface.
+
+Depending on which database the user would like to use-- main.db or test.db-- this needs to be specified in the
+get_db() function in the CLI function on line 115.
+"""
 
 from datetime import datetime, date
 import calendar
@@ -10,6 +14,18 @@ from analyse import get_longest_streak, get_current_streak, monthly_habit_comple
 
 
 def check_date(start_date):
+    """This function checks if the date entered is actually a date, by specifying the length of the data input (10),
+        and checking the format. Then the date is verified to be in the future.
+        If the date is not in the future or in poor formatting the user is prompted again to enter a date.
+
+        If the date is in the future, the date is returned to the main function.
+
+        parameters:
+            start_date: str entered by the user
+
+        returns:
+            start_date: str in the format of YYYY-MM-DD (if the date has met all the requirements tested)
+    """
     while True:
         try:
             if len(start_date) == 10:
@@ -28,6 +44,20 @@ def check_date(start_date):
 
 
 def check_name(db, name):
+    """This function checks if the name entered is not empty, does not start with a space, is not a digit, and does not
+        already exist in the database.
+
+        If the name meets all the requirements, the name is returned to the main function.
+
+        If the name does not meet the requirements, the user is prompted to enter a new name.
+
+        parameters:
+            db: database connection from get_db() function
+            name: str entered by the user
+
+        returns:
+            name: str (if the name has met all the requirements tested)
+    """
     while True:
         try:
             name = (name.lower()).capitalize()
@@ -50,6 +80,18 @@ def check_name(db, name):
 
 
 def check_description(description):
+    """This function checks if the description entered is not empty, does not start with a space, and is not a digit.
+
+        If the description meets all the requirements, the description is returned to the main function.
+
+        If the description does not meet the requirements, the user is prompted to enter a new description.
+
+        parameters:
+            description: str entered by the user
+
+        returns:
+            description: str (if the description has met all the requirements tested)
+        """
     while True:
         try:
             if not description:
@@ -68,9 +110,9 @@ def check_description(description):
 
 
 def cli():
+    """This function is the main command line interface for the user to interact with the Habit Tracker."""
     while True:
-        db = get_db("test.db")
-
+        db = get_db("main.py")
         choice = questionary.select("What would you like to do?",
                                     choices=["Create Habit", "Check Off Habit", "Show List of Habits", "Analyze Habit",
                                              "Delete Habit", "Reset Habit", "Exit"]).ask()
@@ -97,7 +139,7 @@ def cli():
             elif start_date == "A day in the Future":
                 start_date = questionary.text("Enter the date you would like to start your "
                                               "habit in the format YYYY-MM-DD:").ask()
-                start_date = check_date(start_date)  # Check if the date is in the future
+                start_date = check_date(start_date)  # Check if the date is in the future and in the correct format
 
             elif start_date == "Exit":
                 print(f"Your habit {name} was not created.")
@@ -127,13 +169,13 @@ def cli():
                     today_date = datetime.now().date()
                     # Put both dates in the same format to compare.
 
-                    # Inform user of when their weekly habit should be checked off.
                     weekly_list = [habit[0] for habit in list_of_habits_weekly(db)]
 
+                # Inform user of what day of the week their weekly habit should be checked off.
                 if habit_name in weekly_list:
                     start_date_day_of_week = calendar.day_name[start_date.weekday()]
-                    print(f"\nJust so you know, {habit_name} is a weekly habit.\n\nTrying to do this activity the same day "
-                          f"each week\nwill help you to maintain your habit.\n\n"
+                    print(f"\nJust so you know, {habit_name} is a weekly habit.\n\nTrying to do this activity the same "
+                          f"day each week\nwill help you to maintain your habit.\n\n"
                           f"In order for check-off events to count toward\nyour current streak and longest streak,\n"
                           f"you need to complete your habit on {start_date_day_of_week}s.\n")
 
@@ -206,6 +248,7 @@ def cli():
                 continue
             else:
                 habits.append("Exit")
+                # Inform user of what resetting a habit will do.
                 print("\nPlease note that resetting a habit will delete all check-off events already logged "
                       "and provide a new start date for your habit.\n")
                 habit_name = questionary.select("Which habit would you like to reset?:", habits).ask()
@@ -232,7 +275,7 @@ def cli():
                     elif change_start_date == "Choose a day in the future.":
                         start_date = questionary.text("Enter the date you would like to restart your habit in the "
                                                       "format YYYY-MM-DD:").ask()
-                        check_date(start_date)  # Check if the date is in the future
+                        check_date(start_date)  # Check if the date is in the future and in the correct format
                         reset_habit(db, habit_name, start_date)
 
                     print(f"\n{habit.name} has been reset.\n")
@@ -272,8 +315,8 @@ def cli():
                     continue
                 else:
                     habits.append("Exit")
-                    habit_name = questionary.select("For which habit would you like to know your current streak?",
-                                                    habits).ask()
+                    habit_name = questionary.select("For which habit would you like to know your "
+                                                    "current streak?", habits).ask()
                     current_streak = get_current_streak(db, habit_name)
                     print(f"\n{habit_name} has a current streak of {current_streak}.\n")
 

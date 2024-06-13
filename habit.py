@@ -7,7 +7,7 @@ from db import get_db, add_habit, get_primary_key, add_habit_completion
 class Habit:
     """This is the Habit Class and associated methods."""
 
-    Database = "test.db"
+    Database = "main.db"
 
     def __init__(self, name: str = None, description: str = None, frequency: str = None, start_date: date = None):
         """
