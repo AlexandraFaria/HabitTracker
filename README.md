@@ -213,18 +213,19 @@ pytest.exe
 
 **Note:** The test data used is in the file conftest.py. The conftest.py includes all test fixtures including:
 
-    -5 predefined habits (3 daily and 2 weekly)
+**-5 predefined habits (3 daily and 2 weekly)
 
-    -4 weeks of check-off events for all 5 habits
+-4 weeks of check-off events for all 5 habits**
 
-This file should be stored in the same folder as the test file:
-test_habit.py.
 
-5. Currently, after running Pytest all tests should pass. However, the last two methods are skipped which delete the
-data in the database (the teardown method for some reason does not delete the test.db file from the directory). 
 
-Note: These two methods are skipped to allow the user to interact with the data from the test.db file while running the
-main.py file.  This will allow the user to test the functionality of the Habit Tracker.
+5. After running pytest, the test.db file will be created with the test data. The last two functions in test_habit.py
+are currently being skipped, so that the user is able to interact with the data from the test.db file while running the
+main.py file. 
+
+If you would like to interact with the test data, you need to proceed to the main.py file and change the database to the
+test database by changing the following lines in the main.py file:
+**line 115:** db = get_db(**"test.db"**)
 
 6. If you would like to run pytest again, I would recommend manually deleting the test.db file. 
 
@@ -233,8 +234,8 @@ To delete the test.db file manually, type the following command in the terminal:
 ``````commandline   
 del .\test.db
 ``````
-7. Then comment out the two fixture notes @pytest.mark.skip in the test_habit.py file. This allows the last two methods
-to run and delete all the data in the test.db file, instead of skipping these last two methods.
+7. Then comment out the two fixture notes @pytest.mark.skip in the test_habit.py file. This permits the last two methods
+to run and delete all the data in the test.db file.
 
 
 
