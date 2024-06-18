@@ -112,7 +112,7 @@ def check_description(description):
 def cli():
     """This function is the main command line interface for the user to interact with the Habit Tracker."""
     while True:
-        db = get_db("main.py")
+        db = get_db(Habit.Database)
         choice = questionary.select("What would you like to do?",
                                     choices=["Create Habit", "Check Off Habit", "Show List of Habits", "Analyze Habit",
                                              "Delete Habit", "Reset Habit", "Exit"]).ask()
