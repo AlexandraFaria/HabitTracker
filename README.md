@@ -82,13 +82,11 @@ pip install pytest
 2. Navigate to the directory where the Habit Tracker is located.
 
 3. Decide whether you would like to use the test data or not. (If you would like to use the test data please proceed to 
-[How to use Test Data and Pytest](#How-to-use-Test-Data-and-Pytest) section.) Otherwise proceed to the next step.
+[How to use Test Data and Pytest](#How-to-use-Test-Data-and-Pytest) section.) Or proceed to the next step.
 
 4. Set database to "main.db" by following the steps below:
    - Open the habit.py file and change the database to "main.db" by changing the code in line **10** to the following:
      - **Database = "main.db"**
-   - Open the main.py file and change the database to "main.db" by changing the code in line **115** to the following:
-     - **db = get_db("main.db")**
 
 5. Run the Habit Tracker by typing the following command in the terminal:
 
@@ -223,19 +221,22 @@ The conftest.py includes all test fixtures including:
     are currently being skipped, so that the user is able to interact with the data from the test.db file while running 
     the main.py file. 
 
-If you would like to interact with the test data, you need to proceed to the main.py file and change the 
-database to "test.db" by changing the following lines in the main.py file:
+6. Run the Habit Tracker by typing the following command in the terminal:
 
-**line 115:** db = get_db(**"test.db"**)
+``````commandline
+python main.py
+``````
 
-6. If you would like to run pytest again, I would recommend manually deleting the test.db file. 
+7. If you would like to run pytest again, I would recommend manually deleting the test.db file after you have used
+the test data in the main.py file.
 
 To delete the test.db file manually, type the following command in the terminal:
 
 ``````commandline   
 del .\test.db
 ``````
-7. Then comment out the two fixture notes @pytest.mark.skip in the test_habit.py file. This permits the last two methods
+
+8. Then comment out the two fixture notes @pytest.mark.skip in the test_habit.py file. This permits the last two methods
 to run and deletes all data in the test.db file.
 
 
