@@ -1,8 +1,4 @@
-"""This module includes the functions associated with checking user input and the main command line interface.
-
-Depending on which database the user would like to use-- main.db or test.db-- this needs to be specified in the
-get_db() function in the CLI function on line 115.
-"""
+"""This module includes the functions associated with checking user input and the main command line interface."""
 
 from datetime import datetime, date
 import calendar
